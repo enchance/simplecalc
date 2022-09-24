@@ -1,9 +1,14 @@
-import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/Calculator.dart';
+import '../widgets/calculator_widgets.dart';
+
 
 
 class CalculatorScreen extends StatefulWidget {
-
   CalculatorScreen({Key? key}) : super(key: key);
 
   @override
@@ -11,17 +16,30 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
-  List<String> _buttons = [
-    'c', 'abs', 'del', '/',
+  final List<String> _buttons = [
+    'C', '(', ')', '/',
     '7', '8', '9', 'x',
     '4', '5', '6', '-',
     '1', '2', '3', '+',
-    '00', '0', '.', '=',
+    '%', '0', '.', '=',
   ];
-  var display = '';
+
+  void _copy(BuildContext context, String data) async {
+    await Clipboard.setData(ClipboardData(text: data));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Copied to clipboard!'))
+    );
+  }
+
+  void _paste(CalculatorProvider calc) async {
+    ClipboardData? cbdata = await Clipboard.getData('text/plain');
+    if(cbdata != null) calc.append(cbdata.text as String);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final calc = Provider.of<CalculatorProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: Container(
@@ -29,13 +47,60 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         child: Column(
           children: [
             Container(
-              child: Text('Display here')
+              constraints: const BoxConstraints(
+                minHeight: 100,
+                maxHeight: 180,
+              ),
+              width: double.infinity,
+              padding: const EdgeInsets.all(5),
+              // margin: const EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                color: Colors.white54,
+                // border: Border.all(color: Colors.white, width: 2),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: SingleChildScrollView(child: Display(calc.equation, 30)),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                        onPressed: () => _paste(calc),
+                        icon: const Icon(
+                          Icons.paste_sharp,
+                          color: Colors.black45,
+                        )
+                    ),
+                    IconButton(
+                        onPressed: () => _copy(context, calc.equation),
+                        icon: const Icon(
+                          Icons.copy,
+                          color: Colors.black45,
+                        )
+                    ),
+                  ],
+                ),
+                OutlinedButton.icon(
+                  onPressed: () => calc.pop(),
+                  icon: const Icon(
+                    Icons.backspace,
+                    color: Colors.red,
+                  ),
+                  label: Text('Delete', style: TextStyle(color: Colors.red)),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.red, width: 1)
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
             Expanded(
               child: GridView.builder(
                 itemCount: _buttons.length,
                 itemBuilder: (_, idx) => CalcButton(value: _buttons[idx]),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
@@ -49,78 +114,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 }
 
+class Display extends StatelessWidget {
+  final double size;
+  final int lines;
+  String value;
 
-class CalcButton extends StatelessWidget {
-  // final Color color;
-  final String value;
-
-  const CalcButton({
-    // required this.color,
-    required this.value,
-    Key? key
-  }) : super(key: key);
+  Display(this.value, this.size, [this.lines = 2, Key? key]) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
-    if(['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].contains(value)) {
-      return GestureDetector(
-        onTap: () {
-          print(value);
-        },
-        child: CalcContent(color: Colors.white, text: Colors.red, value: value)
-      );
-    }
-    else {
-      switch(value) {
-        case '+':
-        case '-':
-        case 'x':
-        case '/':
-          return CalcContent(
-              color: Colors.blueGrey.shade400, value: value
-          );
-        case '=':
-          return CalcContent(
-              color: Colors.orange, value: value
-          );
-        default:
-          return CalcContent(color: Colors.grey, value: value);
-      };
-    }
-  }
-}
-
-class CalcContent extends StatelessWidget {
-  final dynamic value;
-  final Color color;
-  final Color text;
-
-  const CalcContent({
-    required this.color,
-    required this.value,
-    this.text=Colors.white,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(10)
+    return Text(
+      value,
+      // maxLines: lines,
+      style: TextStyle(
+        fontSize: size,
+        fontFamily: 'Nineteen97',
+        color: Colors.blueGrey,
       ),
-      child: Center(
-        child: FittedBox(
-          child: value is String
-            ? Text(value, style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: text
-              ),)
-            : value
-        ),
-      ),
+      textAlign: TextAlign.right,
     );
   }
 }
