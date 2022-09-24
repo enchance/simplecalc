@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:intl/intl.dart';
+
 
 
 class CalculatorProvider extends ChangeNotifier {
@@ -8,6 +10,13 @@ class CalculatorProvider extends ChangeNotifier {
   String get equation => _equation;
 
   void append(String char) {
+    if(_equation.length > 0) {
+      String lastChar = _equation[_equation.length - 1];
+      List<String> operators = ['+', '-', 'x', '/'];
+      if(operators.contains(lastChar) && operators.contains(char)) {
+        _equation = _equation.substring(0, _equation.length - 1);
+      }
+    }
     _equation += char;
     notifyListeners();
   }
@@ -25,14 +34,17 @@ class CalculatorProvider extends ChangeNotifier {
   }
 
   String compute() {
+    // final f = NumberFormat('#,##0.00', 'en_US');
+    final f = NumberFormat.decimalPattern('en_US');
+
     String finalEquation = equation;
-    finalEquation = finalEquation.replaceAll('x', '*');
+    finalEquation = finalEquation.replaceAll('x', '*').replaceAll(',', '');
+    // finalEquation = finalEquation.replaceAll(',', '');
 
     Parser p = Parser();
     Expression exp = p.parse(finalEquation);
     double eval = exp.evaluate(EvaluationType.REAL, ContextModel());
-
-    _equation = eval % 1 == 0 ? eval.toInt().toString() : eval.toString();
+    _equation = f.format(eval);
     notifyListeners();
 
     return _equation;

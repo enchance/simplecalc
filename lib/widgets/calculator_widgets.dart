@@ -84,9 +84,7 @@ class CalcContent extends StatelessWidget {
         boxShadow: color == Colors.white
             ? const [
                 BoxShadow(
-                  blurRadius: 2,
-                  color: Colors.grey,
-                  offset: Offset(1, 1)
+                  blurRadius: 2, color: Colors.grey, offset: Offset(1, 1)
                 )
               ]
             : []

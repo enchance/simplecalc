@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 import '../providers/Calculator.dart';
 import '../widgets/calculator_widgets.dart';
@@ -26,6 +27,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   ];
 
   void _copy(BuildContext context, String data) async {
+    data = data.replaceAll(',', '');
     await Clipboard.setData(ClipboardData(text: data));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Copied to clipboard!'))
@@ -34,7 +36,23 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   void _paste(CalculatorProvider calc) async {
     ClipboardData? cbdata = await Clipboard.getData('text/plain');
-    if(cbdata != null) calc.append(cbdata.text as String);
+    if(cbdata != null) {
+      String chars = cbdata.text as String;
+
+      var finalStr = '';
+      for(int i = 0; i < chars.length; i++) {
+        if([
+          '/',
+          '7', '8', '9', 'x',
+          '4', '5', '6', '-',
+          '1', '2', '3', '+',
+          '0', '.'
+        ].contains(chars[i])) {
+          finalStr += chars[i];
+        }
+      }
+      calc.append(finalStr);
+    }
   }
 
   @override
@@ -91,12 +109,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     onPressed: () => calc.pop(),
                     icon: const Icon(
                       Icons.backspace,
-                      color: Colors.pinkAccent,
+                      color: Colors.black54,
                     ),
                     label: const Text('Delete', style: TextStyle(
-                        color: Colors.pinkAccent)),
+                        color: Colors.black54)),
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.pinkAccent, width: 1)
+                      side: const BorderSide(color: Colors.black54, width: 1)
                     ),
                   ),
                 ],
@@ -135,10 +153,8 @@ class Display extends StatelessWidget {
       value,
       // maxLines: lines,
       style: TextStyle(
-        // height: 0.9,
         fontSize: size,
         fontFamily: 'Nineteen97',
-        // fontFamily: 'Digital7',
         color: Colors.blueGrey,
       ),
       textAlign: TextAlign.right,
