@@ -24,7 +24,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.deepPurple,
         ),
         home: SafeArea(
-          child: CalculatorScreen(),
+          child: LayoutBuilder(
+            builder: (_, constraints) => CalculatorScreen(constraints)
+          ),
         )
       ),
     );

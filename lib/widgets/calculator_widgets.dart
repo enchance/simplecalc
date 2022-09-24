@@ -22,8 +22,7 @@ class CalcButton extends StatelessWidget {
     if (['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].contains(value)) {
       return GestureDetector(
           onTap: () => calc.append(value),
-          child:
-          CalcContent(color: Colors.white, text: Colors.red, value: value));
+          child: CalcContent(color: Colors.white, text: Colors.black, value: value));
     } else if (['.', '(', ')'].contains(value)) {
       return GestureDetector(
           onTap: () => calc.append(value),
@@ -31,17 +30,21 @@ class CalcButton extends StatelessWidget {
               color: Colors.grey, text: Colors.white, value: value));
     } else if (['+', '-', 'x', '/'].contains(value)) {
       return GestureDetector(
-          onTap: () => calc.append(value),
+          onTap: () => calc.equation == '' ? null : calc.append(value),
           child: CalcContent(color: Colors.blueGrey.shade400, value: value));
     } else if (value == '=') {
       return GestureDetector(
-          onTap: () => calc.compute(),
+          onTap: () => calc.equation == '' ? null : calc.compute(),
           child: CalcContent(color: Colors.orange, value: value));
     } else if (value == 'C') {
       return GestureDetector(
           onTap: () => calc.clear(),
           child: CalcContent(color: Colors.grey.shade800, value: value));
-    } else {
+    }
+    else if(value == 'none') {
+      return const CalcContent(color: Colors.transparent, value: '');
+    }
+    else {
       return CalcContent(color: Colors.grey, value: value);
     }
   }
@@ -59,20 +62,42 @@ class CalcContent extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  Color darken(double amount, Color color) {
+    var hsl = HSLColor.fromColor(color);
+    var darkerColor = hsl.withLightness((hsl.lightness - amount).clamp(0, 1));
+    return darkerColor.toColor();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration:
-      BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [color, darken(0.2, color)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(10),
+        border: color == Colors.white
+            ? Border.all(color: darken(0.03, color), width: 1)
+            : Border.all(color: color, width: 2),
+        boxShadow: color == Colors.white
+            ? const [
+                BoxShadow(
+                  blurRadius: 2,
+                  color: Colors.grey,
+                  offset: Offset(1, 1)
+                )
+              ]
+            : []
+      ),
       child: Center(
-        child: FittedBox(
-            child: value is String
-                ? Text(
-              value,
-              style: TextStyle(
-                  fontSize: 30, fontWeight: FontWeight.bold, color: text),
-            )
-                : value),
+        child: value is String
+          ? Text(value, style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold, color: text
+              ))
+          : value,
       ),
     );
   }

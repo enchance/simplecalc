@@ -77,6 +77,9 @@ flutter:
     - family: Nineteen97
       fonts:
         - asset: assets/fonts/NineteenNinetySeven-11XB.ttf
+    - family: Digital7
+      fonts:
+        - asset: assets/fonts/Digital7-1e1Z.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
