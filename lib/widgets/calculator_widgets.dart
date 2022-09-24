@@ -18,7 +18,7 @@ class CalcButton extends StatelessWidget {
       return GestureDetector(
           onTap: () => calc.append(value),
           child: CalcContent(color: Colors.white, text: Colors.black, value: value));
-    } else if (['.', '(', ')'].contains(value)) {
+    } else if (['.', '(', ')', '^'].contains(value)) {
       return GestureDetector(
           onTap: () => calc.append(value),
           child: CalcContent(

@@ -24,7 +24,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     '7', '8', '9', '/',
     '4', '5', '6', 'x',
     '1', '2', '3', '-',
-    'none', '0', '.', '+',
+    '^', '0', '.', '+',
   ];
 
   void _copy(BuildContext context, String data) async {
@@ -62,69 +62,110 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            width: (widget.constraints as BoxConstraints).maxWidth > 500
-              ? 500
-              : double.infinity,
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Container(
-                  constraints: const BoxConstraints(
-                    minHeight: 100,
-                    maxHeight: 163,
-                  ),
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: Colors.white54,
-                    // border: Border.all(color: Colors.white, width: 2),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: SingleChildScrollView(child: Display(calc.equation, 25)),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.paste, color: Colors.black38),
-                      label: const Text('Paste'),
-                      onPressed: () => _paste(calc),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        foregroundColor: Colors.grey[600],
-                        elevation: 0,
-                      ),
-                    ),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.copy, color: Colors.black38),
-                      label: const Text('Copy'),
-                      onPressed: () => _copy(context, calc.equation),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        foregroundColor: Colors.grey[600],
-                        elevation: 0,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                GridView(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8,
-                  ),
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  children: _buttons.map((item) => CalcButton(item)).toList(),
-                ),
-                const SizedBox(height: 10),
-                const CalcButton('='),
-              ],
+      // appBar: AppBar(
+      //   backgroundColor: Colors.red,
+      //   elevation: 0,
+      //   titleSpacing: -50,
+      //   iconTheme: IconThemeData(
+      //     color: Colors.grey,
+      //   ),
+      // ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            Container(
+              height: 100,
+              color: Colors.grey[300],
+              child: DrawerHeader(child: Text('aaa'),)
             ),
+            ListTile(
+                title: Text('Calculator'),
+                leading: Icon(Icons.calculate),
+                onTap: () {}
+            ),
+            ListTile(
+                title: Text('Settings'),
+                leading: Icon(Icons.settings),
+                onTap: () {}
+            ),
+            ListTile(
+                title: Text('About'),
+                leading: Icon(Icons.info_outline),
+                onTap: () {}
+            ),
+          ],
+        )
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          width: (widget.constraints as BoxConstraints).maxWidth > 500
+            ? 500
+            : double.infinity,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              // SizedBox(height: 15),
+              Container(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {},
+                )
+              ),
+
+              Container(
+                constraints: const BoxConstraints(
+                  minHeight: 100,
+                  maxHeight: 163,
+                ),
+                width: double.infinity,
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.white54,
+                  // border: Border.all(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: SingleChildScrollView(child: Display(calc.equation, 25)),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.paste, color: Colors.black38),
+                    label: const Text('Paste'),
+                    onPressed: () => _paste(calc),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.grey[600],
+                      elevation: 0,
+                    ),
+                  ),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.copy, color: Colors.black38),
+                    label: const Text('Copy'),
+                    onPressed: () => _copy(context, calc.equation),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.grey[600],
+                      elevation: 0,
+                    ),
+                  ),
+                ],
+              ),
+              // const SizedBox(height: 10),
+              GridView(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                ),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                children: _buttons.map((item) => CalcButton(item)).toList(),
+              ),
+              const SizedBox(height: 10),
+              const CalcButton('='),
+            ],
           ),
         ),
       ),
