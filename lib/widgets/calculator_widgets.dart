@@ -8,12 +8,7 @@ class CalcButton extends StatelessWidget {
   // final Color color;
   final String value;
 
-  const CalcButton(
-      {
-        // required this.color,
-        required this.value,
-        Key? key})
-      : super(key: key);
+  const CalcButton(this.value, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +45,10 @@ class CalcButton extends StatelessWidget {
           child: CalcContent(color: Colors.grey.shade800, value: value));
     }
     else if(value == 'none') {
-      return const CalcContent(color: Colors.transparent, value: '');
+      return const CalcContent(
+          color: Colors.transparent,
+          value: Icon(Icons.local_cafe_outlined, color: Colors.black38),
+      );
     }
     else {
       return CalcContent(color: Colors.grey, value: value);

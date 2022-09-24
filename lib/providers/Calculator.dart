@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:math_expressions/math_expressions.dart';
-import 'package:intl/intl.dart';
+
+import '../config/utils.dart';
 
 
-
-class CalculatorProvider extends ChangeNotifier {
+class CalculatorProvider with ChangeNotifier {
   String _equation = '';
 
   String get equation => _equation;
 
   void append(String char) {
-    if(_equation.length > 0) {
+    if(_equation.isNotEmpty) {
       String lastChar = _equation[_equation.length - 1];
       List<String> operators = ['+', '-', 'x', '/'];
       if(operators.contains(lastChar) && operators.contains(char)) {
@@ -22,7 +21,7 @@ class CalculatorProvider extends ChangeNotifier {
   }
 
   void pop() {
-    if(_equation.length > 0) {
+    if(_equation.isNotEmpty) {
       _equation = _equation.substring(0, _equation.length - 1);
       notifyListeners();
     }
@@ -35,16 +34,11 @@ class CalculatorProvider extends ChangeNotifier {
 
   String compute() {
     // final f = NumberFormat('#,##0.00', 'en_US');
-    final f = NumberFormat.decimalPattern('en_US');
 
-    String finalEquation = equation;
-    finalEquation = finalEquation.replaceAll('x', '*').replaceAll(',', '');
-    // finalEquation = finalEquation.replaceAll(',', '');
-
-    Parser p = Parser();
-    Expression exp = p.parse(finalEquation);
-    double eval = exp.evaluate(EvaluationType.REAL, ContextModel());
-    _equation = f.format(eval);
+    String cleanStr = _equation;
+    cleanStr = cleanStr.replaceAll('x', '*').replaceAll(',', '');
+    
+    _equation = humanize(cleanStr);
     notifyListeners();
 
     return _equation;
