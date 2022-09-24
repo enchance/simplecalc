@@ -19,11 +19,11 @@ class CalculatorScreen extends StatefulWidget {
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
   final List<String> _buttons = [
-    'C', '(', ')', '/',
-    '7', '8', '9', 'x',
-    '4', '5', '6', '-',
-    '1', '2', '3', '+',
-    'none', '0', '.', '=',
+    'C', '(', ')', 'del',
+    '7', '8', '9', '/',
+    '4', '5', '6', 'x',
+    '1', '2', '3', '-',
+    'none', '0', '.', '+',
   ];
 
   void _copy(BuildContext context, String data) async {
@@ -68,6 +68,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             : double.infinity,
           padding: const EdgeInsets.all(20),
           child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 constraints: const BoxConstraints(
@@ -87,40 +88,39 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                          onPressed: () => _paste(calc),
-                          icon: const Icon(
-                            Icons.paste_sharp,
-                            color: Colors.black45,
-                          )
-                      ),
-                      IconButton(
-                          onPressed: () => _copy(context, calc.equation),
-                          icon: const Icon(
-                            Icons.copy,
-                            color: Colors.black45,
-                          )
-                      ),
-                    ],
+                  IconButton(
+                      onPressed: () => _paste(calc),
+                      icon: const Icon(
+                        Icons.paste_sharp,
+                        color: Colors.black38,
+                      )
                   ),
-                  OutlinedButton.icon(
-                    onPressed: () => calc.pop(),
-                    icon: const Icon(
-                      Icons.backspace,
-                      color: Colors.black54,
-                    ),
-                    label: const Text('Delete', style: TextStyle(
-                        color: Colors.black54)),
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.black54, width: 1)
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.copy, color: Colors.black38),
+                    label: Text('Copy'),
+                    onPressed: () => _copy(context, calc.equation),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.grey[600],
+                      elevation: 0,
                     ),
                   ),
+                  // OutlinedButton.icon(
+                  //   onPressed: () => calc.pop(),
+                  //   icon: const Icon(
+                  //     Icons.backspace,
+                  //     color: Colors.black54,
+                  //   ),
+                  //   label: const Text('Delete', style: TextStyle(
+                  //       color: Colors.black54)),
+                  //   style: OutlinedButton.styleFrom(
+                  //
+                  //   ),
+                  // ),
                 ],
               ),
               const SizedBox(height: 10),
-              Expanded(
+              Flexible(
                 child: GridView.builder(
                   itemCount: _buttons.length,
                   itemBuilder: (_, idx) => CalcButton(value: _buttons[idx]),
@@ -131,6 +131,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   ),
                 ),
               ),
+              Container(
+                // padding: EdgeInsets.symmetric(vertical: 20),
+                child: CalcButton(value: '=')
+              )
             ],
           ),
         ),

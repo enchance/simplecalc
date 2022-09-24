@@ -32,6 +32,14 @@ class CalcButton extends StatelessWidget {
       return GestureDetector(
           onTap: () => calc.equation == '' ? null : calc.append(value),
           child: CalcContent(color: Colors.blueGrey.shade400, value: value));
+    } else if(value == 'del') {
+        return GestureDetector(
+          onTap: () => calc.pop(),
+          child: CalcContent(
+            color: Colors.grey,
+              value: Icon(Icons.backspace, color: Colors.white,)
+          )
+        );
     } else if (value == '=') {
       return GestureDetector(
           onTap: () => calc.equation == '' ? null : calc.compute(),
@@ -89,13 +97,16 @@ class CalcContent extends StatelessWidget {
               ]
             : []
       ),
-      child: Center(
-        child: value is String
-          ? Text(value, style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold, color: text
-              ))
-          : value,
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        child: Center(
+          child: value is String
+            ? Text(value, style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold, color: text
+                ))
+            : value,
+        ),
       ),
     );
   }

@@ -35,6 +35,7 @@ dependencies:
   provider: ^6.0.3
   math_expressions: ^2.3.1
   intl: ^0.17.0
+  flutter_native_splash: ^2.2.9
 
 dev_dependencies:
   flutter_test:
@@ -78,9 +79,6 @@ flutter:
     - family: Nineteen97
       fonts:
         - asset: assets/fonts/NineteenNinetySeven-11XB.ttf
-#    - family: Digital7
-#      fonts:
-#        - asset: assets/fonts/Digital7-1e1Z.ttf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
