@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/Calculator.dart';
+import '../providers/calculator_provider.dart';
 
 
 class CalcButton extends StatelessWidget {

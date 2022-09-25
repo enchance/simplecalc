@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-import '../providers/Calculator.dart';
+import '../providers/calculator_provider.dart';
 import '../widgets/calculator_widgets.dart';
 import '../config/utils.dart';
 

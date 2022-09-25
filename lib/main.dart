@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
 import './screens/calculator_screen.dart';
-import './providers/Calculator.dart';
+import './providers/calculator_provider.dart';
 
 
 void main() {
