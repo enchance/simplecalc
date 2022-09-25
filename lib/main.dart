@@ -32,8 +32,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.deepPurple,
         ),
-        home: CalculatorScreen(),
-        onGenerateRoute: getRoutes(),
+        routes: getRoutes(context),
       ),
     );
   }
