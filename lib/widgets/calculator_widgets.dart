@@ -18,7 +18,7 @@ class CalcButton extends StatelessWidget {
       return GestureDetector(
           onTap: () => calc.append(value),
           child: CalcContent(color: Colors.white, text: Colors.black, value: value));
-    } else if (['.', '(', ')', '^'].contains(value)) {
+    } else if (['.', '(', ')'].contains(value)) {
       return GestureDetector(
           onTap: () => calc.append(value),
           child: CalcContent(
@@ -50,9 +50,7 @@ class CalcButton extends StatelessWidget {
           value: Icon(Icons.local_cafe_outlined, color: Colors.black38),
       );
     }
-    else {
-      return CalcContent(color: Colors.grey, value: value);
-    }
+    return CalcContent(color: Colors.grey, value: value);
   }
 }
 

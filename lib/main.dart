@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import './screens/calculator_screen.dart';
 import './providers/calculator_provider.dart';
+import './routes.dart';
 
 
 void main() {
@@ -31,9 +32,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.deepPurple,
         ),
-        home: LayoutBuilder(
-          builder: (_, constraints) => CalculatorScreen(constraints)
-        )
+        home: CalculatorScreen(),
+        onGenerateRoute: getRoutes(),
       ),
     );
   }
