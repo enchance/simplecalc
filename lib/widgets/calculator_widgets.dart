@@ -32,7 +32,14 @@ class CalcButton extends StatelessWidget {
           onTap: () => calc.equation == '' ? null : calc.append(value),
           child: CalcContent(
               // color: NordTheme.shadeTint(NordTheme.frost3, -0.05), value: value)
-              color: NordTheme.primary, value: value)
+              color: NordTheme.frost2, value: value)
+      );
+    } else if (['='].contains(value)) {
+      return GestureDetector(
+          onTap: () => calc.equation == '' ? null : calc.compute(),
+          child: CalcContent(
+            // color: NordTheme.shadeTint(NordTheme.primary, 0.1), value: value)
+          color: NordTheme.green, value: value)
       );
     } else if(value == 'del') {
         return GestureDetector(
@@ -42,10 +49,6 @@ class CalcButton extends StatelessWidget {
             value: Icon(Icons.backspace, color: Colors.white,)
           )
         );
-    } else if (value == '=') {
-      return GestureDetector(
-          onTap: () => calc.equation == '' ? null : calc.compute(),
-          child: CalcContent(color: NordTheme.primary, value: value));
     } else if (value == 'C') {
       return GestureDetector(
           onTap: () => calc.clear(),

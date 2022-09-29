@@ -20,14 +20,15 @@ class CalculatorScreen extends StatefulWidget {
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
+  var _currentIdx = 0;
   final List<String> _buttons = [
-    'C', '(', ')', 'del',
-    '7', '8', '9', '/',
-    '4', '5', '6', 'x',
-    '1', '2', '3', '-',
-    'none', '0', '.', '+',
+    'C', 'none', 'del', '/',
+    '7', '8', '9', 'x',
+    '4', '5', '6', '-',
+    '1', '2', '3', '+',
+    'none', '0', '.', '=',
   ];
+
 
   void _copy(BuildContext context, String data) async {
     data = data.replaceAll(',', '');
@@ -58,14 +59,17 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     final calc = Provider.of<CalculatorProvider>(context);
     var maxWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      key: _scaffoldKey,
       backgroundColor: NordTheme.snow3,
+      // key: _scaffoldKey,
+      // backgroundColor: NordTheme.snow3,
       // appBar: AppBar(
       //   // toolbarHeight: 30,
       //   backgroundColor: Colors.transparent,
@@ -75,7 +79,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       //     color: Colors.grey[700],
       //   ),
       // ),
-      drawer: DrawerWidget(),
+      // drawer: DrawerWidget(),
+
       body: SingleChildScrollView(
         child: LayoutBuilder(
           builder: (_, constraints) => Container(
@@ -83,9 +88,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                SizedBox(height: 50),
-                MenuWidget(_scaffoldKey),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
+                // MenuWidget(_scaffoldKey),
+                // SizedBox(height: 10),
                 Container(
                   constraints: const BoxConstraints(
                     minHeight: 90,
@@ -137,9 +142,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   physics: NeverScrollableScrollPhysics(),
                   children: _buttons.map((item) => CalcButton(item)).toList(),
                 ),
-                const SizedBox(height: 10),
-                const CalcButton('='),
-                const SizedBox(height: 15),
+                // const SizedBox(height: 10),
+                // const CalcButton('='),
+                // const SizedBox(height: 15),
               ],
             ),
           ),
