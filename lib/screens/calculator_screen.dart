@@ -83,7 +83,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                SizedBox(height: 30),
+                SizedBox(height: 50),
                 MenuWidget(_scaffoldKey),
                 SizedBox(height: 10),
                 Container(
