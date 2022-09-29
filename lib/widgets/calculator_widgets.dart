@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/calculator_provider.dart';
+import '../core/styles.dart';
 
 
 class CalcButton extends StatelessWidget {
@@ -22,27 +23,33 @@ class CalcButton extends StatelessWidget {
       return GestureDetector(
           onTap: () => calc.append(value),
           child: CalcContent(
-              color: Colors.grey, text: Colors.white, value: value));
+              color: NordTheme.shadeTint(Colors.grey, -0.1),
+              text: Colors.white,
+              value: value)
+      );
     } else if (['+', '-', 'x', '/'].contains(value)) {
       return GestureDetector(
           onTap: () => calc.equation == '' ? null : calc.append(value),
-          child: CalcContent(color: Colors.blueGrey.shade400, value: value));
+          child: CalcContent(
+              // color: NordTheme.shadeTint(NordTheme.frost3, -0.05), value: value)
+              color: NordTheme.primary, value: value)
+      );
     } else if(value == 'del') {
         return GestureDetector(
           onTap: () => calc.pop(),
           child: CalcContent(
-            color: Colors.grey,
-              value: Icon(Icons.backspace, color: Colors.white,)
+            color: NordTheme.shadeTint(Colors.grey, -0.1),
+            value: Icon(Icons.backspace, color: Colors.white,)
           )
         );
     } else if (value == '=') {
       return GestureDetector(
           onTap: () => calc.equation == '' ? null : calc.compute(),
-          child: CalcContent(color: Colors.orange, value: value));
+          child: CalcContent(color: NordTheme.primary, value: value));
     } else if (value == 'C') {
       return GestureDetector(
           onTap: () => calc.clear(),
-          child: CalcContent(color: Colors.grey.shade800, value: value));
+          child: CalcContent(color: Colors.grey.shade600, value: value));
     }
     else if(value == 'none') {
       return const CalcContent(
@@ -58,11 +65,13 @@ class CalcContent extends StatelessWidget {
   final dynamic value;
   final Color color;
   final Color text;
+  final bool useGradient;
 
   const CalcContent({
     required this.color,
     required this.value,
     this.text = Colors.white,
+    this.useGradient = false,
     Key? key,
   }) : super(key: key);
 
@@ -76,11 +85,17 @@ class CalcContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [color, darken(0.2, color)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: useGradient
+          ? LinearGradient(
+              colors: [color, darken(0.1, color)],
+              stops: [.5, 0.9],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            )
+          : null,
+        color: useGradient
+          ? null
+          : color,
         borderRadius: BorderRadius.circular(10),
         border: color == Colors.white
             ? Border.all(color: darken(0.03, color), width: 1)
@@ -88,7 +103,9 @@ class CalcContent extends StatelessWidget {
         boxShadow: color == Colors.white
             ? const [
                 BoxShadow(
-                  blurRadius: 2, color: Colors.grey, offset: Offset(1, 1)
+                  blurRadius: 1,
+                  color: Colors.black26,
+                  offset: Offset(1, 1),
                 )
               ]
             : []

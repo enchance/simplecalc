@@ -17,16 +17,27 @@ class _CryptoScreenState extends State<CryptoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var maxWidth = MediaQuery.of(context).size.width;
+
     return Container(
       child: Scaffold(
         key: _scaffoldKey,
         drawer: DrawerWidget(),
-        body: Column(
-          children: [
-            SizedBox(height: 22),
-            MenuWidget(_scaffoldKey),
-            const Text('Crypto'),
-          ],
+        body: SingleChildScrollView(
+          child: LayoutBuilder(
+            builder: (_, constraints) => Container(
+              width: maxWidth > 500 ? 500 : double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  SizedBox(height: 30),
+                  MenuWidget(_scaffoldKey),
+                  SizedBox(height: 10),
+                  const Text('Crypto')
+                ],
+              )
+            ),
+          ),
         )
       )
     );

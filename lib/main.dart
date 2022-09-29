@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import './screens/calculator_screen.dart';
 import './providers/calculator_provider.dart';
 import './routes.dart';
+import './core/styles.dart';
 
 
 void main() {
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
+          primaryColor: NordTheme.primary,
+          toggleableActiveColor: NordTheme.primary,
         ),
         routes: getRoutes(context),
       ),

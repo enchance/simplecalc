@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/calculator_screen.dart';
 import '../screens/crypto_screen.dart';
 import '../screens/settings_screen.dart';
+import '../core/styles.dart';
 
 
 class MenuWidget extends StatelessWidget {
@@ -14,9 +15,18 @@ class MenuWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      child: IconButton(
-        icon: const Icon(Icons.menu, color: Colors.grey,),
-        onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: NordTheme.primary,
+          borderRadius: BorderRadius.circular(5)
+        ),
+        child: IconButton(
+          icon: const Icon(Icons.menu, color: Colors.white,
+          ),
+          onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+        ),
       ),
     );
   }
@@ -33,27 +43,35 @@ class DrawerWidget extends StatelessWidget {
           children: [
             Container(
                 height: 100,
-                color: Colors.grey[300],
-                child: DrawerHeader(child: Text('aaa'),)
+                color: NordTheme.primary,
+                child: DrawerHeader(child: const Text('aaa'),)
             ),
             ListTile(
-                title: Text('Calculator'),
-                leading: Icon(Icons.calculate),
+                title: const Text('Calculator', style: TextStyle(
+                  color: Colors.black,
+                )),
+                leading: const Icon(Icons.calculate, color: NordTheme.primary,),
                 onTap: () => Navigator.of(context).pushReplacementNamed(CalculatorScreen.route)
             ),
             ListTile(
-                title: Text('Crypto'),
-                leading: Icon(Icons.line_axis),
+                title: const Text('Crypto', style: TextStyle(
+                  color: Colors.black,
+                )),
+                leading: const Icon(Icons.line_axis, color: NordTheme.primary,),
                 onTap: () => Navigator.of(context).pushReplacementNamed(CryptoScreen.route)
             ),
             ListTile(
-                title: Text('Settings'),
-                leading: Icon(Icons.settings),
-                onTap: () => Navigator.of(context).pushNamed(SettingsScreen.route)
+                title: const Text('Settings', style: TextStyle(
+                  color: Colors.black,
+                )),
+                leading: const Icon(Icons.settings, color: NordTheme.primary,),
+                onTap: () => Navigator.of(context).popAndPushNamed(SettingsScreen.route)
             ),
             ListTile(
-                title: Text('About'),
-                leading: Icon(Icons.info_outline),
+                title: const Text('About', style: TextStyle(
+                  color: Colors.black,
+                )),
+                leading: const Icon(Icons.info_outline, color: NordTheme.primary,),
                 onTap: () {}
             ),
           ],

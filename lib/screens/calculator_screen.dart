@@ -7,7 +7,7 @@ import 'package:simplecalc/screens/settings_screen.dart';
 import '../providers/calculator_provider.dart';
 import '../widgets/calculator_widgets.dart';
 import '../widgets/nav_widget.dart';
-
+import '../core/styles.dart';
 
 
 class CalculatorScreen extends StatefulWidget {
@@ -65,7 +65,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.grey[300],
+      backgroundColor: NordTheme.snow3,
       // appBar: AppBar(
       //   // toolbarHeight: 30,
       //   backgroundColor: Colors.transparent,
@@ -78,70 +78,69 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       drawer: DrawerWidget(),
       body: SingleChildScrollView(
         child: LayoutBuilder(
-          builder: (_, constraints) => Center(
-            child: Container(
-              width: maxWidth > 500 ? 500 : double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  SizedBox(height: 22),
-                  MenuWidget(_scaffoldKey),
-                  Container(
-                    constraints: const BoxConstraints(
-                      minHeight: 100,
-                      maxHeight: 163,
-                    ),
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.white54,
-                      // border: Border.all(color: Colors.white, width: 2),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: SingleChildScrollView(child: Display(calc.equation, 25)),
+          builder: (_, constraints) => Container(
+            width: maxWidth > 500 ? 500 : double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                SizedBox(height: 30),
+                MenuWidget(_scaffoldKey),
+                SizedBox(height: 10),
+                Container(
+                  constraints: const BoxConstraints(
+                    minHeight: 90,
+                    maxHeight: 163,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.paste, color: Colors.black38),
-                        label: const Text('Paste'),
-                        onPressed: () => _paste(calc),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Colors.grey[600],
-                          elevation: 0,
-                        ),
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: NordTheme.snow1,
+                    // border: Border.all(color: NordSwatch.shadeTint(NordSwatch.snow1, .1), width: 1),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: SingleChildScrollView(child: Display(calc.equation, 25)),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.paste, color: Colors.black38),
+                      label: const Text('Paste'),
+                      onPressed: () => _paste(calc),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.grey[600],
+                        elevation: 0,
                       ),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.copy, color: Colors.black38),
-                        label: const Text('Copy'),
-                        onPressed: () => _copy(context, calc.equation),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Colors.grey[600],
-                          elevation: 0,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  GridView(
-                    padding: EdgeInsets.all(0),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
                     ),
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: _buttons.map((item) => CalcButton(item)).toList(),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.copy, color: Colors.black38),
+                      label: const Text('Copy'),
+                      onPressed: () => _copy(context, calc.equation),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.grey[600],
+                        elevation: 0,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                GridView(
+                  padding: EdgeInsets.all(0),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
                   ),
-                  const SizedBox(height: 10),
-                  const CalcButton('='),
-                  const SizedBox(height: 15),
-                ],
-              ),
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: _buttons.map((item) => CalcButton(item)).toList(),
+                ),
+                const SizedBox(height: 10),
+                const CalcButton('='),
+                const SizedBox(height: 15),
+              ],
             ),
           ),
         ),

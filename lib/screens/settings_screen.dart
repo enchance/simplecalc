@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../core/styles.dart';
 
 
 class SettingsScreen extends StatefulWidget {
@@ -20,7 +21,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings')
+        title: const Text('Settings'),
+        backgroundColor: NordTheme.primary,
       ),
       body: SingleChildScrollView(
         child: Column(
