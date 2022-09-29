@@ -6,12 +6,12 @@ import 'package:simplecalc/screens/settings_screen.dart';
 
 import '../providers/calculator_provider.dart';
 import '../widgets/calculator_widgets.dart';
+import '../widgets/nav_widget.dart';
 
 
 
 class CalculatorScreen extends StatefulWidget {
-  // dynamic constraints;
-
+  static const route = '/calculator';
   CalculatorScreen({Key? key}) : super(key: key);
 
   @override
@@ -19,7 +19,7 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
-  // GlobalKey<ScaffoldState> scaffolKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   final List<String> _buttons = [
     'C', '(', ')', 'del',
@@ -60,12 +60,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<ScaffoldState> scaffolKey = GlobalKey<ScaffoldState>();
     final calc = Provider.of<CalculatorProvider>(context);
     var maxWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      key: scaffolKey,
+      key: _scaffoldKey,
       backgroundColor: Colors.grey[300],
       // appBar: AppBar(
       //   // toolbarHeight: 30,
@@ -76,32 +75,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       //     color: Colors.grey[700],
       //   ),
       // ),
-      // drawer: Drawer(
-      //   child: ListView(
-      //     children: [
-      //       Container(
-      //         height: 100,
-      //         color: Colors.grey[300],
-      //         child: DrawerHeader(child: Text('aaa'),)
-      //       ),
-      //       ListTile(
-      //           title: Text('Calculator'),
-      //           leading: Icon(Icons.calculate),
-      //           onTap: () {}
-      //       ),
-      //       ListTile(
-      //           title: Text('Settings'),
-      //           leading: Icon(Icons.settings),
-      //           onTap: () {}
-      //       ),
-      //       ListTile(
-      //           title: Text('About'),
-      //           leading: Icon(Icons.info_outline),
-      //           onTap: () {}
-      //       ),
-      //     ],
-      //   )
-      // ),
+      drawer: DrawerWidget(),
       body: SingleChildScrollView(
         child: LayoutBuilder(
           builder: (_, constraints) => Center(
@@ -111,15 +85,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               child: Column(
                 children: [
                   SizedBox(height: 22),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.settings, color: Colors.grey,),
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(SettingsScreen.route);
-                      },
-                    ),
-                  ),
+                  MenuWidget(_scaffoldKey),
                   Container(
                     constraints: const BoxConstraints(
                       minHeight: 100,
