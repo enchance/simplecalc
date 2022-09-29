@@ -20,11 +20,14 @@ class CalculatorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void pop() {
+  String pop() {
     if(_equation.isNotEmpty) {
+      String last = _equation[_equation.length - 1];
       _equation = _equation.substring(0, _equation.length - 1);
       notifyListeners();
+      return last;
     }
+    return '';
   }
 
   void clear() {

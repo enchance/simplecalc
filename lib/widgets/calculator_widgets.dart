@@ -5,62 +5,80 @@ import '../providers/calculator_provider.dart';
 import '../core/styles.dart';
 
 
-class CalcButton extends StatelessWidget {
+class CalcButton extends StatefulWidget {
   // final Color color;
   final String value;
 
-  const CalcButton(this.value, {Key? key}) : super(key: key);
+  CalcButton(this.value, {Key? key}) : super(key: key);
+
+  @override
+  State<CalcButton> createState() => _CalcButtonState();
+}
+
+class _CalcButtonState extends State<CalcButton> {
+  var dot = true;
 
   @override
   Widget build(BuildContext context) {
     final calc = Provider.of<CalculatorProvider>(context);
 
-    if (['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].contains(value)) {
+    if (['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].contains(widget.value)) {
       return GestureDetector(
-          onTap: () => calc.append(value),
-          child: CalcContent(color: Colors.white, text: Colors.black, value: value));
-    } else if (['.', '(', ')'].contains(value)) {
+          onTap: () {
+            calc.append(widget.value);
+            print(dot);
+          },
+          child: CalcContent(color: Colors.white, text: Colors.black, value: widget.value));
+    } else if (['.', '(', ')'].contains(widget.value)) {
       return GestureDetector(
-          onTap: () => calc.append(value),
+          onTap: () {
+            // if(widget.value == '.' && !dot) return;
+            // setState(() => dot = false);
+            calc.append(widget.value);
+          },
           child: CalcContent(
               color: NordTheme.shadeTint(Colors.grey, -0.1),
               text: Colors.white,
-              value: value)
+              value: widget.value)
       );
-    } else if (['+', '-', 'x', '/'].contains(value)) {
+    } else if (['+', '-', 'x', '/'].contains(widget.value)) {
       return GestureDetector(
-          onTap: () => calc.equation == '' ? null : calc.append(value),
+          onTap: () => calc.equation == '' ? null : calc.append(widget.value),
           child: CalcContent(
               // color: NordTheme.shadeTint(NordTheme.frost3, -0.05), value: value)
-              color: NordTheme.frost2, value: value)
+              color: NordTheme.frost2, value: widget.value)
       );
-    } else if (['='].contains(value)) {
+    } else if (['='].contains(widget.value)) {
       return GestureDetector(
           onTap: () => calc.equation == '' ? null : calc.compute(),
           child: CalcContent(
             // color: NordTheme.shadeTint(NordTheme.primary, 0.1), value: value)
-          color: NordTheme.green, value: value)
+          color: NordTheme.green, value: widget.value)
       );
-    } else if(value == 'del') {
+    } else if(widget.value == 'del') {
         return GestureDetector(
-          onTap: () => calc.pop(),
+          onTap: () {
+            String char = calc.pop();
+            if(char == '.') setState(() => dot = true);
+            // TODO: dot won't come back
+          },
           child: CalcContent(
             color: NordTheme.shadeTint(Colors.grey, -0.1),
             value: Icon(Icons.backspace, color: Colors.white,)
           )
         );
-    } else if (value == 'C') {
+    } else if (widget.value == 'C') {
       return GestureDetector(
           onTap: () => calc.clear(),
-          child: CalcContent(color: Colors.grey.shade600, value: value));
+          child: CalcContent(color: Colors.grey.shade600, value: widget.value));
     }
-    else if(value == 'none') {
+    else if(widget.value == 'none') {
       return const CalcContent(
           color: Colors.transparent,
           value: Icon(Icons.local_cafe_outlined, color: Colors.black38),
       );
     }
-    return CalcContent(color: Colors.grey, value: value);
+    return CalcContent(color: Colors.grey, value: widget.value);
   }
 }
 
