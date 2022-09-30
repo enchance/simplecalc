@@ -41,12 +41,6 @@ class _MyAppState extends State<MyApp> {
     initialPage: 0,
   );
 
-  List<Widget> _pages = [
-    CalculatorScreen(),
-    CryptoScreen(),
-    SettingsScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -81,7 +75,11 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             body: TabBarView(
-              children: _pages,
+              children: [
+                CalculatorScreen(),
+                CryptoScreen(),
+                SettingsScreen(),
+              ],
             )
           ),
 

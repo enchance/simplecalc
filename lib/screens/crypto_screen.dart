@@ -25,10 +25,9 @@ class _CryptoScreenState extends State<CryptoScreen> {
   double _earnings = 0;
   double _percent = 0;
 
-
   Widget buildInvestment({String error='Investment required'}) {
     return TextFormField(
-      // maxLength: 10,
+      keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: 'Investment',
         // border: OutlineInputBorder(),
@@ -38,7 +37,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
         if(double.tryParse(val) == null) return error;
         if(double.parse(val) <= 0) return error;
       },
-      onSaved: ([String? val='']) {
+      onSaved: (val) {
         _investment = double.parse(val!);
       },
     );
@@ -46,7 +45,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
 
   Widget buildBuy({String error='Buy amount required'}) {
     return TextFormField(
-      // maxLength: 10,
+      keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: 'Buy amount',
         // border: OutlineInputBorder(),
@@ -56,7 +55,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
         if(double.tryParse(val) == null) return error;
         if(double.parse(val) <= 0) return error;
       },
-      onSaved: ([String? val='']) {
+      onSaved: (val) {
         _buy = double.parse(val!);
       },
     );
@@ -64,7 +63,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
 
   Widget buildSell({String error='Sell amount required'}) {
     return TextFormField(
-      // maxLength: 10,
+      keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: 'Sell amount',
         // border: OutlineInputBorder(),
@@ -74,7 +73,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
         if(double.tryParse(val) == null) return error;
         if(double.parse(val) <= 0) return error;
       },
-      onSaved: ([String? val='']) {
+      onSaved: (val) {
         _sell = double.parse(val!);
       },
     );
@@ -97,9 +96,6 @@ class _CryptoScreenState extends State<CryptoScreen> {
                 key: formKey,
                 child: Column(
                   children: [
-                    SizedBox(height: 50),
-                    MenuWidget(_scaffoldKey),
-                    SizedBox(height: 10),
                     buildInvestment(),
                     buildBuy(),
                     buildSell(),

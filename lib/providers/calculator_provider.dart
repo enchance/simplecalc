@@ -40,7 +40,7 @@ class CalculatorProvider with ChangeNotifier {
 
     String cleanStr = _equation;
     cleanStr = cleanStr.replaceAll('x', '*').replaceAll(',', '');
-    
+
     _equation = humanize(cleanStr);
     notifyListeners();
 
