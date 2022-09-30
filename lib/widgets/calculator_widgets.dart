@@ -123,9 +123,10 @@ class _CalcButtonState extends State<CalcButton> {
       );
     }
     else if(widget.value == 'none') {
+      return Container(width: 0);
       return const CalcContent(
           color: Colors.transparent,
-          value: Icon(Icons.local_cafe_outlined, color: Colors.black38),
+          value: Icon(Icons.tag_faces, color: Colors.black38),
       );
     }
     return CalcContent(color: Colors.grey, value: widget.value);

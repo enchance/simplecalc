@@ -39,6 +39,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
 
   Widget buildInvestment({String error='Investment required'}) {
     return TextFormField(
+      autofocus: true,
       controller: _invcont,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
@@ -64,7 +65,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
     );
   }
 
-  Widget buildBuy({String error='Buy amount required'}) {
+  Widget buildBuy({String error='Buy price required'}) {
     return TextFormField(
       controller: _buycont,
       keyboardType: TextInputType.number,
@@ -76,7 +77,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
           icon: Icon(Icons.close),
           onPressed: () => _buycont.clear(),
         ),
-        labelText: 'Buy amount',
+        labelText: 'Buy price',
         // border: OutlineInputBorder(),
       ),
       validator: ([String? val='']) {
@@ -90,7 +91,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
     );
   }
 
-  Widget buildSell({String error='Sell amount required'}) {
+  Widget buildSell({String error='Sell price required'}) {
     return TextFormField(
       controller: _sellcont,
       keyboardType: TextInputType.number,
@@ -102,7 +103,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
           icon: Icon(Icons.close),
           onPressed: () => _sellcont.clear(),
         ),
-        labelText: 'Sell amount',
+        labelText: 'Sell price',
         // border: OutlineInputBorder(),
       ),
       validator: ([String? val='']) {
@@ -134,7 +135,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
                 child: Column(
                   children: [
                     SizedBox(height: 20),
-                    ...ScreenHeadline(context, 'Crypto'),
+                    ...buildHeadlineText(context, 'Crypto'),
                     buildInvestment(),
                     buildBuy(),
                     buildSell(),

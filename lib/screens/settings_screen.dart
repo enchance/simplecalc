@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/styles.dart';
+import '../main.dart';
 
 
 class SettingsScreen extends StatefulWidget {
@@ -20,13 +21,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: NordTheme.primary,
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: 20),
+            ...buildHeadlineText(context, 'Settings', 20),
             const Divider(),
             SwitchListTile(
               title: const Text('Comma delimited'),

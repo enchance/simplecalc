@@ -29,18 +29,40 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  var _currentIdx = 0;
+class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
 
   // void _navHandler(int idx) {
   //   setState(() => _currentIdx = idx);
   // }
 
   void pageHandler(int idx) => print(idx);
+  final List<Widget> _pages = const [
+    CalculatorScreen(),
+    CryptoScreen(),
+    SettingsScreen(),
+  ];
 
   final controller = PageController(
     initialPage: 0,
   );
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _pages.length, vsync: this);
+    _tabController.addListener(() {
+      if(_tabController.index != 1) {
+        FocusScope.of(context).requestFocus(FocusNode());
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,37 +80,31 @@ class _MyAppState extends State<MyApp> {
             headline1: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           )
         ),
-        home: DefaultTabController(
-          length: 3,
-          child: KeyboardDismisser(
-            child: Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(kToolbarHeight),
-                child: AppBar(
-                  backgroundColor: NordTheme.snow3,
-                  elevation: 0,
-                  bottom: const TabBar(
-                    labelColor: NordTheme.primary,
-                    unselectedLabelColor: Colors.grey,
-                    indicatorColor: NordTheme.primary,
-                    tabs: [
-                      Tab(icon: Icon(Icons.calculate)),
-                      Tab(icon: Icon(Icons.currency_bitcoin)),
-                      Tab(icon: Icon(Icons.settings)),
-                    ]
-                  ),
+        home: KeyboardDismisser(
+          child: Scaffold(
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(kToolbarHeight),
+              child: AppBar(
+                backgroundColor: NordTheme.snow3,
+                elevation: 0,
+                bottom: TabBar(
+                  controller: _tabController,
+                  labelColor: NordTheme.primary,
+                  unselectedLabelColor: Colors.grey,
+                  indicatorColor: NordTheme.primary,
+                  tabs: const [
+                    Tab(icon: Icon(Icons.calculate)),
+                    Tab(icon: Icon(Icons.currency_bitcoin)),
+                    Tab(icon: Icon(Icons.settings)),
+                  ]
                 ),
               ),
-              body: TabBarView(
-                children: [
-                  CalculatorScreen(),
-                  CryptoScreen(),
-                  SettingsScreen(),
-                ],
-              )
             ),
+            body: TabBarView(
+              controller: _tabController,
+              children: _pages,
+            )
           ),
-
         )
         // home: PageView(
         //   onPageChanged: pageHandler,
@@ -126,11 +142,13 @@ class _MyAppState extends State<MyApp> {
 }
 
 
-List<Widget> ScreenHeadline(BuildContext context, String text) {
+List<Widget> buildHeadlineText(BuildContext context, String text,
+    [double padding=0]) {
   return [
     Container(
       alignment: Alignment.centerLeft,
-      child: Text('Crypto calculator',
+      padding: EdgeInsets.symmetric(horizontal: padding),
+      child: Text(text,
         style: Theme.of(context).textTheme.headline1,
       ),
     ),

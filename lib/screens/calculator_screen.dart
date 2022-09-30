@@ -12,7 +12,7 @@ import '../core/styles.dart';
 
 class CalculatorScreen extends StatefulWidget {
   static const route = '/calculator';
-  CalculatorScreen({Key? key}) : super(key: key);
+  const CalculatorScreen({Key? key}) : super(key: key);
 
   @override
   State<CalculatorScreen> createState() => _CalculatorScreenState();
@@ -20,7 +20,7 @@ class CalculatorScreen extends StatefulWidget {
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  var _currentIdx = 0;
+  // var _currentIdx = 0;
   final List<String> _buttons = [
     'C', 'exp', 'del', '/',
     '7', '8', '9', 'x',

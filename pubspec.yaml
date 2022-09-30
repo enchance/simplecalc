@@ -36,11 +36,13 @@ dependencies:
   math_expressions: ^2.3.1
   intl: ^0.17.0
   flutter_native_splash: ^2.2.9
-  flutter_launcher_icons: ^0.10.0
   auto_size_text: ^3.0.0
   keyboard_dismisser: ^3.0.0
 
 dev_dependencies:
+  # flutter pub run flutter_launcher_icons:main
+  flutter_launcher_icons: ^0.10.0
+
   flutter_test:
     sdk: flutter
 
@@ -59,8 +61,8 @@ flutter_icons:
   android: true
   image_path_ios: "assets/launcher/launcher.png"
   image_path_android: "assets/launcher/launcher.png"
-  adaptive_icon_background: "assets/launcher/background.png"
-  #  adaptive_icon_foreground: "assets/launcher/foreground.png"
+#  adaptive_icon_background: "assets/launcher/background.png"
+#  adaptive_icon_foreground: "assets/launcher/foreground.png"
 
 
 # The following section is specific to Flutter packages.
