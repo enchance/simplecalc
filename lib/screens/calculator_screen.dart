@@ -68,19 +68,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
     return Scaffold(
       backgroundColor: NordTheme.snow3,
-      // key: _scaffoldKey,
-      // backgroundColor: NordTheme.snow3,
-      // appBar: AppBar(
-      //   // toolbarHeight: 30,
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      //   titleSpacing: -50,
-      //   iconTheme: IconThemeData(
-      //     color: Colors.grey[700],
-      //   ),
-      // ),
-      // drawer: DrawerWidget(),
-
       body: SingleChildScrollView(
         child: LayoutBuilder(
           builder: (_, constraints) => Container(
@@ -90,8 +77,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               child: Column(
                 children: [
                   SizedBox(height: 20),
-                  // MenuWidget(_scaffoldKey),
-                  // SizedBox(height: 10),
                   Display(calc.equation, 22),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,6 +103,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 5),
                   GridView(
                     padding: EdgeInsets.all(0),

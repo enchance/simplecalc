@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-import 'package:simplecalc/screens/crypto_screen.dart';
-import 'package:simplecalc/screens/settings_screen.dart';
+import 'package:simplecalc/core/providers/settings.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
 import './screens/calculator_screen.dart';
 import './providers/calculator_provider.dart';
 import './routes.dart';
 import './core/styles.dart';
+import './screens/crypto_screen.dart';
+import './screens/settings_screen.dart';
 
 
 void main() {
@@ -68,7 +69,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => CalculatorProvider())
+        ChangeNotifierProvider(create: (_) => CalculatorProvider()),
+        ChangeNotifierProvider(create: (_) => Settings()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
