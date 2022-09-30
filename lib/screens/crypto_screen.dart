@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../widgets/nav_widget.dart';
 import '../core/utils.dart';
+import '../main.dart';
 
 
 
@@ -24,12 +25,32 @@ class _CryptoScreenState extends State<CryptoScreen> {
   double _sell = 0;
   double _earnings = 0;
   double _percent = 0;
+  TextEditingController _invcont = TextEditingController();
+  TextEditingController _buycont = TextEditingController();
+  TextEditingController _sellcont = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _invcont.addListener(() => setState(() {}));
+    _buycont.addListener(() => setState(() {}));
+    _sellcont.addListener(() => setState(() {}));
+  }
 
   Widget buildInvestment({String error='Investment required'}) {
     return TextFormField(
+      controller: _invcont,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        labelText: 'Investment',
+        prefixIcon: Icon(Icons.attach_money),
+        suffixIcon: _invcont.text.isEmpty
+          ? Container(width: 0)
+          : IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () => _invcont.clear(),
+            ),
+        hintText: 'Spend amount'
+        // labelText: 'Investment',
         // border: OutlineInputBorder(),
       ),
       validator: ([String? val='']) {
@@ -45,8 +66,16 @@ class _CryptoScreenState extends State<CryptoScreen> {
 
   Widget buildBuy({String error='Buy amount required'}) {
     return TextFormField(
+      controller: _buycont,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.currency_bitcoin),
+        suffixIcon: _buycont.text.isEmpty
+            ? Container(width: 0)
+            : IconButton(
+          icon: Icon(Icons.close),
+          onPressed: () => _buycont.clear(),
+        ),
         labelText: 'Buy amount',
         // border: OutlineInputBorder(),
       ),
@@ -63,8 +92,16 @@ class _CryptoScreenState extends State<CryptoScreen> {
 
   Widget buildSell({String error='Sell amount required'}) {
     return TextFormField(
+      controller: _sellcont,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.currency_bitcoin),
+        suffixIcon: _sellcont.text.isEmpty
+            ? Container(width: 0)
+            : IconButton(
+          icon: Icon(Icons.close),
+          onPressed: () => _sellcont.clear(),
+        ),
         labelText: 'Sell amount',
         // border: OutlineInputBorder(),
       ),
@@ -96,9 +133,12 @@ class _CryptoScreenState extends State<CryptoScreen> {
                 key: formKey,
                 child: Column(
                   children: [
+                    SizedBox(height: 20),
+                    ...ScreenHeadline(context, 'Crypto'),
                     buildInvestment(),
                     buildBuy(),
                     buildSell(),
+                    SizedBox(height: 10),
                     Container(
                       width: double.infinity,
                       child: ElevatedButton(

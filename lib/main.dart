@@ -53,6 +53,9 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           primaryColor: NordTheme.primary,
           toggleableActiveColor: NordTheme.primary,
+          textTheme: TextTheme(
+            headline1: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          )
         ),
         home: DefaultTabController(
           length: 3,
@@ -117,4 +120,17 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+}
+
+
+List<Widget> ScreenHeadline(BuildContext context, String text) {
+  return [
+    Container(
+      alignment: Alignment.centerLeft,
+      child: Text('Crypto calculator',
+        style: Theme.of(context).textTheme.headline1,
+      ),
+    ),
+    SizedBox(height: 20),
+  ];
 }
