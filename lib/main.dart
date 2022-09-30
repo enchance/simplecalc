@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:simplecalc/screens/crypto_screen.dart';
 import 'package:simplecalc/screens/settings_screen.dart';
+import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
 import './screens/calculator_screen.dart';
 import './providers/calculator_provider.dart';
@@ -59,31 +60,33 @@ class _MyAppState extends State<MyApp> {
         ),
         home: DefaultTabController(
           length: 3,
-          child: Scaffold(
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(kToolbarHeight),
-              child: AppBar(
-                backgroundColor: NordTheme.snow3,
-                elevation: 0,
-                bottom: const TabBar(
-                  labelColor: NordTheme.primary,
-                  unselectedLabelColor: Colors.grey,
-                  indicatorColor: NordTheme.primary,
-                  tabs: [
-                    Tab(icon: Icon(Icons.calculate)),
-                    Tab(icon: Icon(Icons.currency_bitcoin)),
-                    Tab(icon: Icon(Icons.settings)),
-                  ]
+          child: KeyboardDismisser(
+            child: Scaffold(
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(kToolbarHeight),
+                child: AppBar(
+                  backgroundColor: NordTheme.snow3,
+                  elevation: 0,
+                  bottom: const TabBar(
+                    labelColor: NordTheme.primary,
+                    unselectedLabelColor: Colors.grey,
+                    indicatorColor: NordTheme.primary,
+                    tabs: [
+                      Tab(icon: Icon(Icons.calculate)),
+                      Tab(icon: Icon(Icons.currency_bitcoin)),
+                      Tab(icon: Icon(Icons.settings)),
+                    ]
+                  ),
                 ),
               ),
+              body: TabBarView(
+                children: [
+                  CalculatorScreen(),
+                  CryptoScreen(),
+                  SettingsScreen(),
+                ],
+              )
             ),
-            body: TabBarView(
-              children: [
-                CalculatorScreen(),
-                CryptoScreen(),
-                SettingsScreen(),
-              ],
-            )
           ),
 
         )
