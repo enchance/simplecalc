@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   final List<Widget> _pages = const [
     CalculatorScreen(),
     CryptoScreen(),
-    SettingsScreen(),
+    // SettingsScreen(),
   ];
 
   final controller = PageController(
@@ -98,7 +98,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                   tabs: const [
                     Tab(icon: Icon(Icons.calculate, size: 30,)),
                     Tab(icon: Icon(Icons.area_chart, size: 30,)),
-                    Tab(icon: Icon(Icons.settings, size: 30,)),
+                    // Tab(icon: Icon(Icons.settings, size: 30,)),
                   ]
                 ),
               ),

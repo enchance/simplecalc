@@ -143,7 +143,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
-                ...buildHeadlineText(context, 'Trading'),
+                ...buildHeadlineText(context, 'Profit Calculator'),
                 buildInvestment(),
                 buildBuy(),
                 buildSell(),
