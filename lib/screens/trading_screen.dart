@@ -28,6 +28,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
   final TextEditingController _invcont = TextEditingController();
   final TextEditingController _buycont = TextEditingController();
   final TextEditingController _sellcont = TextEditingController();
+  final FocusNode node1 = FocusNode();
 
   @override
   void initState() {
@@ -37,8 +38,16 @@ class _CryptoScreenState extends State<CryptoScreen> {
     _sellcont.addListener(() => setState(() {}));
   }
 
+  void _clearForm() {
+    _invcont.clear();
+    _buycont.clear();
+    _sellcont.clear();
+    FocusScope.of(context).requestFocus(node1);
+  }
+
   Widget buildInvestment({String error='Investment required'}) {
     return TextFormField(
+      focusNode: node1,
       autofocus: true,
       controller: _invcont,
       keyboardType: TextInputType.number,
@@ -131,6 +140,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
           child: Form(
             key: formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
                 ...buildHeadlineText(context, 'Trading'),
@@ -138,43 +148,58 @@ class _CryptoScreenState extends State<CryptoScreen> {
                 buildBuy(),
                 buildSell(),
                 const SizedBox(height: 10),
-                Container(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        if(!formKey.currentState!.validate()) return;
-                        formKey.currentState!.save();
-                        setState(() {
-                          _earnings = (_investment / _buy) * _sell - _investment;
-                          _percent = _earnings / _investment * 100;
-                        });
-                      },
-                      child: const Text('Calculate')
-                  ),
+                ElevatedButton(
+                    onPressed: () {
+                      if(!formKey.currentState!.validate()) return;
+                      formKey.currentState!.save();
+                      setState(() {
+                        _earnings = (_investment / _buy) * _sell - _investment;
+                        _percent = _earnings / _investment * 100;
+                      });
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
+                    child: const Text('Calculate')
                 ),
                 const SizedBox(height: 20),
 
                 if(_earnings == 0)
-                  const Text('0 USDT', style: TextStyle(
+                  const Text('0 USDT',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey
-                  )),
+                      color: Colors.grey,
+                    )),
 
                 if(_earnings != 0)
-                  Text('${f.format(_earnings)} USDT', style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: _earnings > 0 ? Colors.green : Colors.red
-                  )),
+                  Text('${f.format(_earnings)} USDT',
+                      textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: _earnings > 0 ? Colors.green : Colors.red
+                    )),
 
                 if(_earnings > 0)
-                  Text('${f.format(_percent)}% gain', style: const TextStyle(
-                    fontSize: 20)),
+                  Text('${f.format(_percent)}% gain',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 20)
+                    ),
 
                 if(_earnings < 0)
-                  Text('${f.format(_percent)}% loss', style: const TextStyle(
-                      fontSize: 20)),
+                  Text('${f.format(_percent)}% loss',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 20)
+                    ),
+
+                const SizedBox(height: 20),
+                TextButton.icon(
+                    onPressed: () => _clearForm(),
+                    icon: Icon(Icons.clear),
+                    label: const Text('Clear form', style: TextStyle(
+                      fontWeight: FontWeight.bold
+                    ))
+                )
               ],
             ),
           )
