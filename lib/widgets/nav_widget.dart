@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../screens/calculator_screen.dart';
-import '../screens/crypto_screen.dart';
+import '../screens/trading_screen.dart';
 import '../screens/settings_screen.dart';
 import '../core/styles.dart';
 

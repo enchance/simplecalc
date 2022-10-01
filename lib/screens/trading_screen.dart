@@ -126,61 +126,59 @@ class _CryptoScreenState extends State<CryptoScreen> {
         key: _scaffoldKey,
         drawer: DrawerWidget(),
         body: SingleChildScrollView(
-          child: LayoutBuilder(
-            builder: (_, constraints) => Container(
-              width: maxWidth > 500 ? 500 : double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    ...buildHeadlineText(context, 'Crypto'),
-                    buildInvestment(),
-                    buildBuy(),
-                    buildSell(),
-                    SizedBox(height: 10),
-                    Container(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            if(!formKey.currentState!.validate()) return;
-                            formKey.currentState!.save();
-                            setState(() {
-                              _earnings = (_investment / _buy) * _sell - _investment;
-                              _percent = _earnings / _investment * 100;
-                            });
-                          },
-                          child: Text('Calculate')
-                      ),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  ...buildHeadlineText(context, 'Trading'),
+                  buildInvestment(),
+                  buildBuy(),
+                  buildSell(),
+                  SizedBox(height: 10),
+                  Container(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          if(!formKey.currentState!.validate()) return;
+                          formKey.currentState!.save();
+                          setState(() {
+                            _earnings = (_investment / _buy) * _sell - _investment;
+                            _percent = _earnings / _investment * 100;
+                          });
+                        },
+                        child: Text('Calculate')
                     ),
-                    SizedBox(height: 20),
+                  ),
+                  SizedBox(height: 20),
 
-                    if(_earnings == 0)
-                      Text('0 USDT', style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey
-                      )),
-
-                    if(_earnings != 0)
-                      Text('${f.format(_earnings)} USDT', style: TextStyle(
+                  if(_earnings == 0)
+                    Text('0 USDT', style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: _earnings > 0 ? Colors.green : Colors.red
-                      )),
+                        color: Colors.grey
+                    )),
 
-                    if(_earnings > 0)
-                      Text('${f.format(_percent)}% gain', style: TextStyle(
+                  if(_earnings != 0)
+                    Text('${f.format(_earnings)} USDT', style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: _earnings > 0 ? Colors.green : Colors.red
+                    )),
+
+                  if(_earnings > 0)
+                    Text('${f.format(_percent)}% gain', style: TextStyle(
+                      fontSize: 20)),
+
+                  if(_earnings < 0)
+                    Text('${f.format(_percent)}% loss', style: TextStyle(
                         fontSize: 20)),
-
-                    if(_earnings < 0)
-                      Text('${f.format(_percent)}% loss', style: TextStyle(
-                          fontSize: 20)),
-                  ],
-                ),
-              )
-            ),
+                ],
+              ),
+            )
           ),
         )
       )

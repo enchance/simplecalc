@@ -8,7 +8,7 @@ import './screens/calculator_screen.dart';
 import './providers/calculator_provider.dart';
 import './routes.dart';
 import './core/styles.dart';
-import './screens/crypto_screen.dart';
+import './screens/trading_screen.dart';
 import './screens/settings_screen.dart';
 
 
@@ -67,6 +67,13 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+
+    // Prevent landscape mode
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CalculatorProvider()),
@@ -96,7 +103,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                   indicatorColor: NordTheme.primary,
                   tabs: const [
                     Tab(icon: Icon(Icons.calculate)),
-                    Tab(icon: Icon(Icons.currency_bitcoin)),
+                    Tab(icon: Icon(Icons.area_chart)),
                     Tab(icon: Icon(Icons.settings)),
                   ]
                 ),

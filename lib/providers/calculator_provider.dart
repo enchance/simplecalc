@@ -11,7 +11,7 @@ class CalculatorProvider with ChangeNotifier {
   void append(String char) {
     if(_equation.isNotEmpty) {
       String lastChar = _equation[_equation.length - 1];
-      List<String> operators = ['+', '-', 'x', '/'];
+      List<String> operators = ['+', '-', 'x', '÷'];
       if(operators.contains(lastChar) && operators.contains(char)) {
         _equation = _equation.substring(0, _equation.length - 1);
       }
@@ -40,6 +40,7 @@ class CalculatorProvider with ChangeNotifier {
 
     String cleanStr = _equation;
     cleanStr = cleanStr.replaceAll('x', '*').replaceAll(',', '');
+    cleanStr = cleanStr.replaceAll('÷', '/').replaceAll(',', '');
 
     _equation = humanize(cleanStr);
     notifyListeners();
