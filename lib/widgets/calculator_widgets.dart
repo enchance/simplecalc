@@ -99,9 +99,10 @@ class _CalcButtonState extends State<CalcButton> {
   void _negpos(CalculatorProvider calc) {
     var chars = calc.equation.characters;
     List<String> valid = ['1', '2', '3', '4', '5', '6', '7', '8', '9',
-                          '0', '.'];
+                          '0', '.', ','];
     for(var i = 0; i < chars.length; i++) {
       if(i == 0 && calc.equation[i] == '-') continue;
+      // if(calc.equation[i] == ',') continue;
       if(!valid.contains(calc.equation[i])) return;
     }
     calc.append('x-1');
@@ -112,7 +113,8 @@ class _CalcButtonState extends State<CalcButton> {
   Widget build(BuildContext context) {
     final calc = Provider.of<CalculatorProvider>(context, listen: false);
 
-    if (['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].contains(widget.value)) {
+    if (['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].contains(widget
+        .value)) {
       return GestureDetector(
           onTap: () => calc.append(widget.value),
           child: CalcContent(
@@ -121,55 +123,92 @@ class _CalcButtonState extends State<CalcButton> {
         return GestureDetector(
             onTap: () => calc.equation == '' && widget.value != '-'
                 ? null : calc.append(widget.value),
-            child: CalcContent(color: NordTheme.frost2, value: widget.value)
-        );
-    } else if (['(', ')', '.'].contains(widget.value)) {
-        return GestureDetector(
-            onTap: () => calc.append(widget.value),
-            child: CalcContent(
-                color: NordTheme.shadeTint(Colors.grey, -0.1),
-                value: widget.value
-            )
+            child: CalcContent(color: NordTheme.frost2.shade400, value: widget.value)
         );
     }
 
     switch(widget.value) {
-      case '00':
+      case '.':
         return GestureDetector(
-            onTap: () => calc.equation == '' ? null : calc.append(widget.value),
+            onTap: () => calc.append(widget.value),
             child: CalcContent(
-                color: NordTheme.shadeTint(Colors.grey, -0.1),
+                color: tintColor(Colors.grey, 0.3),
                 value: widget.value
             )
         );
 
-      case 'M+':
-          return GestureDetector(
-          onTap: () => _copy(context, calc.equation),
-          child: CalcContent(
-            color: NordTheme.shadeTint(Colors.grey, -0.1),
-            value: widget.value)
-          );
-      case 'M-':
+      case '00':
         return GestureDetector(
-          onTap: () => _clearClipboard(context),
-          child: CalcContent(
-            color: NordTheme.shadeTint(Colors.grey, -0.1),
-            value: widget.value)
+            onTap: () => calc.equation == '' ? null : calc.append(widget.value),
+            child: CalcContent(
+                color: tintColor(Colors.grey, 0.3),
+                value: widget.value
+            )
         );
-      case 'MR':
-        return GestureDetector(
-          onTap: () => _paste(calc),
-          child: CalcContent(
-            color: NordTheme.shadeTint(Colors.grey, -0.1),
-            value: widget.value)
+
+      case '()':
+        return Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                    onTap: () => calc.append('('),
+                    child: CalcContent(
+                      color: tintColor(Colors.grey, 0.3),
+                      value: '(',
+                      fontSize: 20,
+                      radius: 'left',
+                    )
+                ),
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: GestureDetector(
+                    onTap: () => calc.append(')'),
+                    child: CalcContent(
+                      color: tintColor(Colors.grey, 0.3),
+                      value: ')',
+                      fontSize: 20,
+                      radius: 'right',
+                    )
+                ),
+              ),
+            ]
+        );
+
+      case 'M':
+        return Column(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () => _copy(context, calc.equation),
+                child: CalcContent(
+                  color: tintColor(Colors.grey, 0.3),
+                  value: 'M+',
+                  fontSize: 20,
+                  radius: 'top',
+                )
+              ),
+            ),
+            const SizedBox(height: 6),
+            Expanded(
+              child: GestureDetector(
+                onTap: () => _paste(calc),
+                child: CalcContent(
+                  color: tintColor(Colors.grey, 0.3),
+                  value: 'MR',
+                  fontSize: 20,
+                  radius: 'bottom',
+                )
+              ),
+            ),
+          ],
         );
 
       case '+/-':
         return GestureDetector(
             onTap: () => _negpos(calc),
             child: CalcContent(
-                color: NordTheme.shadeTint(Colors.grey, -0.1),
+                color: tintColor(Colors.grey, 0.3),
                 value: widget.value)
         );
 
@@ -177,7 +216,7 @@ class _CalcButtonState extends State<CalcButton> {
         return GestureDetector(
           onTap: () => calc.clear(),
           child: CalcContent(
-            color: NordTheme.shadeTint(Colors.grey, -0.1),
+            color: tintColor(Colors.grey, 0.3),
             value: widget.value
           )
         );
@@ -193,12 +232,15 @@ class _CalcButtonState extends State<CalcButton> {
         return GestureDetector(
             onTap: () => calc.pop(),
             child: CalcContent(
-                color: NordTheme.shadeTint(Colors.grey, -0.1),
+                color: tintColor(Colors.grey, 0.3),
                 value: Icon(Icons.backspace, color: Colors.white,)
             )
         );
+
+      default:
+        return Container(width: 0);
     }
-    return CalcContent(color: Colors.grey, value: widget.value);
+    // return CalcContent(color: Colors.grey, value: widget.value);
   }
 }
 
@@ -207,12 +249,16 @@ class CalcContent extends StatelessWidget {
   final Color color;
   final Color text;
   final bool useGradient;
+  final double fontSize;
+  final String radius;
 
   const CalcContent({
     required this.color,
     required this.value,
     this.text = Colors.white,
     this.useGradient = false,
+    this.fontSize = 30,
+    this.radius = 'all',
     Key? key,
   }) : super(key: key);
 
@@ -220,6 +266,35 @@ class CalcContent extends StatelessWidget {
     var hsl = HSLColor.fromColor(color);
     var darkerColor = hsl.withLightness((hsl.lightness - amount).clamp(0, 1));
     return darkerColor.toColor();
+  }
+
+  BorderRadius _boxRadius(String radius) {
+    if(radius == 'top') {
+      return const BorderRadius.only(
+        topLeft: Radius.circular(10),
+        topRight: Radius.circular(10),
+      );
+      // return BorderRadius.circular(10);
+    }
+    else if(radius == 'bottom') {
+      return const BorderRadius.only(
+        bottomLeft: Radius.circular(10),
+        bottomRight: Radius.circular(10),
+      );
+    }
+    else if(radius == 'left') {
+      return const BorderRadius.only(
+        topLeft: Radius.circular(10),
+        bottomLeft: Radius.circular(10),
+      );
+    }
+    else if(radius == 'right') {
+      return const BorderRadius.only(
+        topRight: Radius.circular(10),
+        bottomRight: Radius.circular(10),
+      );
+    }
+    return BorderRadius.circular(10);
   }
 
   @override
@@ -237,7 +312,7 @@ class CalcContent extends StatelessWidget {
         color: useGradient
           ? null
           : color,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: _boxRadius(radius),
         border: color == Colors.white
             ? Border.all(color: darken(0.03, color), width: 1)
             : Border.all(color: color, width: 2),
@@ -252,12 +327,14 @@ class CalcContent extends StatelessWidget {
             : []
       ),
       child: Container(
-        padding: const EdgeInsets.all(10),
+        // padding: radius == 'all'
+        //   ? const EdgeInsets.all(10)
+        //   : const EdgeInsets.symmetric(vertical: 7),
         child: Center(
           child: value is String
             ? FittedBox(
               child: Text(value, style: TextStyle(
-                  fontSize: 30,
+                  fontSize: fontSize,
                   fontWeight: FontWeight.bold, color: text
                   )),
             )

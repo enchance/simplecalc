@@ -25,9 +25,9 @@ class _CryptoScreenState extends State<CryptoScreen> {
   double _sell = 0;
   double _earnings = 0;
   double _percent = 0;
-  TextEditingController _invcont = TextEditingController();
-  TextEditingController _buycont = TextEditingController();
-  TextEditingController _sellcont = TextEditingController();
+  final TextEditingController _invcont = TextEditingController();
+  final TextEditingController _buycont = TextEditingController();
+  final TextEditingController _sellcont = TextEditingController();
 
   @override
   void initState() {
@@ -43,11 +43,11 @@ class _CryptoScreenState extends State<CryptoScreen> {
       controller: _invcont,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.attach_money),
+        prefixIcon: const Icon(Icons.attach_money),
         suffixIcon: _invcont.text.isEmpty
           ? Container(width: 0)
           : IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () => _invcont.clear(),
             ),
         hintText: 'Spend amount'
@@ -96,13 +96,13 @@ class _CryptoScreenState extends State<CryptoScreen> {
       controller: _sellcont,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.currency_bitcoin),
+        prefixIcon: const Icon(Icons.currency_bitcoin),
         suffixIcon: _sellcont.text.isEmpty
             ? Container(width: 0)
             : IconButton(
-          icon: Icon(Icons.close),
-          onPressed: () => _sellcont.clear(),
-        ),
+                icon: const Icon(Icons.close),
+                onPressed: () => _sellcont.clear(),
+              ),
         labelText: 'Sell price',
         // border: OutlineInputBorder(),
       ),
@@ -121,66 +121,64 @@ class _CryptoScreenState extends State<CryptoScreen> {
   Widget build(BuildContext context) {
     var maxWidth = MediaQuery.of(context).size.width;
 
-    return Container(
-      child: Scaffold(
-        key: _scaffoldKey,
-        drawer: DrawerWidget(),
-        body: SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  ...buildHeadlineText(context, 'Trading'),
-                  buildInvestment(),
-                  buildBuy(),
-                  buildSell(),
-                  SizedBox(height: 10),
-                  Container(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          if(!formKey.currentState!.validate()) return;
-                          formKey.currentState!.save();
-                          setState(() {
-                            _earnings = (_investment / _buy) * _sell - _investment;
-                            _percent = _earnings / _investment * 100;
-                          });
-                        },
-                        child: Text('Calculate')
-                    ),
+    return Scaffold(
+      key: _scaffoldKey,
+      // drawer: DrawerWidget(),
+      body: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                ...buildHeadlineText(context, 'Trading'),
+                buildInvestment(),
+                buildBuy(),
+                buildSell(),
+                const SizedBox(height: 10),
+                Container(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        if(!formKey.currentState!.validate()) return;
+                        formKey.currentState!.save();
+                        setState(() {
+                          _earnings = (_investment / _buy) * _sell - _investment;
+                          _percent = _earnings / _investment * 100;
+                        });
+                      },
+                      child: const Text('Calculate')
                   ),
-                  SizedBox(height: 20),
+                ),
+                const SizedBox(height: 20),
 
-                  if(_earnings == 0)
-                    Text('0 USDT', style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey
-                    )),
-
-                  if(_earnings != 0)
-                    Text('${f.format(_earnings)} USDT', style: TextStyle(
+                if(_earnings == 0)
+                  const Text('0 USDT', style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: _earnings > 0 ? Colors.green : Colors.red
-                    )),
+                      color: Colors.grey
+                  )),
 
-                  if(_earnings > 0)
-                    Text('${f.format(_percent)}% gain', style: TextStyle(
+                if(_earnings != 0)
+                  Text('${f.format(_earnings)} USDT', style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: _earnings > 0 ? Colors.green : Colors.red
+                  )),
+
+                if(_earnings > 0)
+                  Text('${f.format(_percent)}% gain', style: const TextStyle(
+                    fontSize: 20)),
+
+                if(_earnings < 0)
+                  Text('${f.format(_percent)}% loss', style: const TextStyle(
                       fontSize: 20)),
-
-                  if(_earnings < 0)
-                    Text('${f.format(_percent)}% loss', style: TextStyle(
-                        fontSize: 20)),
-                ],
-              ),
-            )
-          ),
-        )
+              ],
+            ),
+          )
+        ),
       )
     );
   }

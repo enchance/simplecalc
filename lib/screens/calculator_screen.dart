@@ -22,11 +22,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   // var _currentIdx = 0;
   final List<String> _buttons = [
-    'C', '(', ')', 'del', '÷',
-    'MR', '7', '8', '9', 'x',
-    'M+', '4', '5', '6', '-',
-    'M-', '1', '2', '3', '+',
-    '+/-', '00', '0', '.', '=',
+    // 'C', 'MR', 'M+', 'del',
+    // '(', ')', 'M-', '÷',
+    'C', 'M', 'del', '÷',
+    '7', '8', '9', 'x',
+    '4', '5', '6', '-',
+    '1', '2', '3', '+',
+    '()', '0', '.', '=',
   ];
 
   @override
@@ -50,7 +52,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 GridView(
                   padding: EdgeInsets.all(0),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 5,
+                    crossAxisCount: 4,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
                   ),

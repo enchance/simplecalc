@@ -10,6 +10,7 @@ import './routes.dart';
 import './core/styles.dart';
 import './screens/trading_screen.dart';
 import './screens/settings_screen.dart';
+import './core/theme.dart';
 
 
 void main() {
@@ -82,29 +83,22 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        theme: ThemeData(
-          primaryColor: NordTheme.primary,
-          toggleableActiveColor: NordTheme.primary,
-          textTheme: TextTheme(
-            headline1: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          )
-        ),
+        theme: AppTheme.light(),
         home: KeyboardDismisser(
           child: Scaffold(
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(kToolbarHeight),
               child: AppBar(
-                backgroundColor: NordTheme.snow3,
-                elevation: 0,
+                backgroundColor: NordTheme.primary,
                 bottom: TabBar(
                   controller: _tabController,
-                  labelColor: NordTheme.primary,
-                  unselectedLabelColor: Colors.grey,
+                  labelColor: Colors.white,
+                  unselectedLabelColor: NordTheme.primary.shade200,
                   indicatorColor: NordTheme.primary,
                   tabs: const [
-                    Tab(icon: Icon(Icons.calculate)),
-                    Tab(icon: Icon(Icons.area_chart)),
-                    Tab(icon: Icon(Icons.settings)),
+                    Tab(icon: Icon(Icons.calculate, size: 30,)),
+                    Tab(icon: Icon(Icons.area_chart, size: 30,)),
+                    Tab(icon: Icon(Icons.settings, size: 30,)),
                   ]
                 ),
               ),

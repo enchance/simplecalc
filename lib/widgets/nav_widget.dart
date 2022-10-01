@@ -18,7 +18,7 @@ class MenuWidget extends StatelessWidget {
       child: Container(
         width: 40,
         height: 40,
-        decoration: BoxDecoration(
+        decoration:BoxDecoration(
           color: NordTheme.primary,
           borderRadius: BorderRadius.circular(5)
         ),
@@ -42,36 +42,35 @@ class DrawerWidget extends StatelessWidget {
         child: ListView(
           children: [
             Container(
-                height: 100,
-                color: NordTheme.primary,
+                height: 100, color: NordTheme.primary,
                 child: DrawerHeader(child: const Text('aaa'),)
             ),
             ListTile(
                 title: const Text('Calculator', style: TextStyle(
                   color: Colors.black,
                 )),
-                leading: const Icon(Icons.calculate, color: NordTheme.primary,),
+                leading: Icon(Icons.calculate, color: NordTheme.primary,),
                 onTap: () => Navigator.of(context).pushReplacementNamed(CalculatorScreen.route)
             ),
             ListTile(
                 title: const Text('Crypto', style: TextStyle(
                   color: Colors.black,
                 )),
-                leading: const Icon(Icons.line_axis, color: NordTheme.primary,),
+                leading: Icon(Icons.line_axis, color: NordTheme.primary,),
                 onTap: () => Navigator.of(context).pushReplacementNamed(CryptoScreen.route)
             ),
             ListTile(
                 title: const Text('Settings', style: TextStyle(
                   color: Colors.black,
                 )),
-                leading: const Icon(Icons.settings, color: NordTheme.primary,),
+                leading: Icon(Icons.settings, color: NordTheme.primary,),
                 onTap: () => Navigator.of(context).popAndPushNamed(SettingsScreen.route)
             ),
             ListTile(
                 title: const Text('About', style: TextStyle(
                   color: Colors.black,
                 )),
-                leading: const Icon(Icons.info_outline, color: NordTheme.primary,),
+                leading: Icon(Icons.info_outline, color: NordTheme.primary,),
                 onTap: () {}
             ),
           ],
