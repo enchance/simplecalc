@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../widgets/nav_widget.dart';
-import '../core/utils.dart';
 import '../main.dart';
 
 
@@ -79,11 +77,11 @@ class _CryptoScreenState extends State<CryptoScreen> {
       controller: _buycont,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.currency_bitcoin),
+        prefixIcon: const Icon(Icons.currency_bitcoin),
         suffixIcon: _buycont.text.isEmpty
             ? Container(width: 0)
             : IconButton(
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close),
           onPressed: () => _buycont.clear(),
         ),
         labelText: 'Buy price',
@@ -128,81 +126,84 @@ class _CryptoScreenState extends State<CryptoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var maxWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       key: _scaffoldKey,
       // drawer: DrawerWidget(),
       body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 20),
-                ...buildHeadlineText(context, 'Profit Calculator'),
-                buildInvestment(),
-                buildBuy(),
-                buildSell(),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                    onPressed: () {
-                      if(!formKey.currentState!.validate()) return;
-                      formKey.currentState!.save();
-                      setState(() {
-                        _earnings = (_investment / _buy) * _sell - _investment;
-                        _percent = _earnings / _investment * 100;
-                      });
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    },
-                    child: const Text('Calculate')
-                ),
-                const SizedBox(height: 20),
-
-                if(_earnings == 0)
-                  const Text('0 USDT',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    )),
-
-                if(_earnings != 0)
-                  Text('${f.format(_earnings)} USDT',
-                      textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: _earnings > 0 ? Colors.green : Colors.red
-                    )),
-
-                if(_earnings > 0)
-                  Text('${f.format(_percent)}% gain',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 20)
-                    ),
-
-                if(_earnings < 0)
-                  Text('${f.format(_percent)}% loss',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 20)
-                    ),
-
-                const SizedBox(height: 20),
-                TextButton.icon(
-                    onPressed: () => _clearForm(),
-                    icon: Icon(Icons.clear),
-                    label: const Text('Clear form', style: TextStyle(
-                      fontWeight: FontWeight.bold
-                    ))
-                )
-              ],
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(
+              maxWidth: 400,
             ),
-          )
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20),
+                  ...buildHeadlineText(context, 'Profit Calculator'),
+                  buildInvestment(),
+                  buildBuy(),
+                  buildSell(),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                      onPressed: () {
+                        if(!formKey.currentState!.validate()) return;
+                        formKey.currentState!.save();
+                        setState(() {
+                          _earnings = (_investment / _buy) * _sell - _investment;
+                          _percent = _earnings / _investment * 100;
+                        });
+                        FocusScope.of(context).requestFocus(FocusNode());
+                      },
+                      child: const Text('Calculate')
+                  ),
+                  const SizedBox(height: 20),
+
+                  if(_earnings == 0)
+                    const Text('0 USDT',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      )),
+
+                  if(_earnings != 0)
+                    Text('${f.format(_earnings)} USDT',
+                        textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: _earnings > 0 ? Colors.green : Colors.red
+                      )),
+
+                  if(_earnings > 0)
+                    Text('${f.format(_percent)}% gain',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 20)
+                      ),
+
+                  if(_earnings < 0)
+                    Text('${f.format(_percent)}% loss',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 20)
+                      ),
+
+                  const SizedBox(height: 20),
+                  TextButton.icon(
+                      onPressed: () => _clearForm(),
+                      icon: const Icon(Icons.clear),
+                      label: const Text('Clear form', style: TextStyle(
+                        fontWeight: FontWeight.bold
+                      ))
+                  )
+                ],
+              ),
+            )
+          ),
         ),
       )
     );
