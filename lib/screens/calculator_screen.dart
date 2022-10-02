@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 import '../providers/calculator_provider.dart';
 import '../widgets/calculator_widgets.dart';
-import '../widgets/nav_widget.dart';
 import '../core/styles.dart';
 
 
@@ -18,7 +15,7 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   // var _currentIdx = 0;
   final List<String> _buttons = [
     // 'C', 'MR', 'M+', 'del',
@@ -33,36 +30,41 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     final calc = Provider.of<CalculatorProvider>(context);
-    var maxWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: NordTheme.snow3,
       body: SingleChildScrollView(
-        child: Container(
-          width: maxWidth > 500 ? 500 : double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Form(
-            child: Column(
-              children: [
-                SizedBox(height: 20),
-                Display(calc.equation, 22),
-                SizedBox(height: 20),
-                const SizedBox(height: 5),
-                GridView(
-                  padding: EdgeInsets.all(0),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8,
+        child: Center(
+          child: Container(
+            // width: maxWidth > 500 ? 500 : double.infinity,
+            // alignment: Alignment.topCenter,
+            constraints: const BoxConstraints(
+              maxWidth: 400,
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Form(
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  Display(calc.equation, 22),
+                  const SizedBox(height: 20),
+                  const SizedBox(height: 5),
+                  GridView(
+                    padding: const EdgeInsets.all(0),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                    ),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: _buttons.map((item) => CalcButton(item)).toList(),
                   ),
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  children: _buttons.map((item) => CalcButton(item)).toList(),
-                ),
-                // const SizedBox(height: 10),
-                // const CalcButton('='),
-                // const SizedBox(height: 15),
-              ],
+                  // const SizedBox(height: 10),
+                  // const CalcButton('='),
+                  // const SizedBox(height: 15),
+                ],
+              ),
             ),
           ),
         ),
