@@ -1,5 +1,5 @@
-name: simplecalc
-description: A new Flutter project.
+name: SimpleCalc
+description: Calculator for those who want things simple
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -60,7 +60,7 @@ flutter_icons:
   android: true
   image_path_ios: "assets/dev/icon.png"
   image_path_android: "assets/dev/icon.png"
-  adaptive_icon_background: "#c1efe3"
+  adaptive_icon_background: "#81baca"
   adaptive_icon_foreground: "assets/dev/adaptive.png"
   remove_alpha_ios: true
 

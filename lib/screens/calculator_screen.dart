@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:simplecalc/screens/settings_screen.dart';
 
 import '../providers/calculator_provider.dart';
 import '../widgets/calculator_widgets.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-import 'package:simplecalc/core/providers/settings.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
+import './core/providers/settings.dart';
 import './screens/calculator_screen.dart';
 import './providers/calculator_provider.dart';
 import './routes.dart';
@@ -14,8 +14,13 @@ import './core/theme.dart';
 
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
+
+// Future initialization(BuildContext? context) async {
+//   await Future.delayed(Duration(seconds: 3));
+// }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -63,7 +68,6 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
 
     // Prevent landscape mode
-    WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
