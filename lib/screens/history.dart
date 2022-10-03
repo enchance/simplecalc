@@ -1,45 +1,16 @@
-import 'package:SimpleCalc/providers/calculator_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+
+import '../providers/calculator_provider.dart';
+import '../app/collections/history.dart';
 
 
 class HistoryScreen extends StatelessWidget {
   static const route = '/history';
-  // final List<Map<String, String>> data = _getData();
-  // late final List<Map<String, String>> data;
 
   HistoryScreen({Key? key}) : super(key: key);
-
-  List<Map<String, dynamic>> get data {
-    return [
-      {
-        'id': 1,
-        'problem': '1+5',
-        'solution': '6'
-      },
-      {
-        'id': 2,
-        'problem': '4-2',
-        'solution': '2'
-      },
-      {
-        'id': 3,
-        'problem': '7-12',
-        'solution': '-5'
-      },
-      {
-        'id': 4,
-        'problem': '12.5x3',
-        'solution': '37.5'
-      },
-      {
-        'id': 5,
-        'problem': '12÷4',
-        'solution': '3'
-      },
-    ];
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,56 +20,74 @@ class HistoryScreen extends StatelessWidget {
       ),
       body: Container(
         // margin: EdgeInsets.only(top: 20),
-        child: data.isNotEmpty
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // const SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  color: Colors.grey[300],
-                  padding: const EdgeInsets.only(
-                    top: 20,
-                    right: 20,
-                    bottom: 10,
-                    left: 20
-                  ),
-                  child: const Text('Tap to append to your equation'),
-                ),
-                // const SizedBox(height: 2),
-                // const Divider(color: Colors.grey),
-                Expanded(child: HistoryList(data))
-              ],
-            )
-          : const EmptyHistoryWidget(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // const SizedBox(height: 20),
+            Container(
+              width: double.infinity,
+              color: Colors.grey[300],
+              padding: const EdgeInsets.only(
+                top: 20,
+                right: 20,
+                bottom: 10,
+                left: 20
+              ),
+              child: const Text('Tap to append to your equation'),
+            ),
+            // const SizedBox(height: 2),
+            // const Divider(color: Colors.grey),
+            Expanded(child: HistoryList())
+          ],
+        )
       ),
     );
   }
 }
 
-class HistoryList extends StatelessWidget {
-  final List data;
+class HistoryList extends StatefulWidget {
 
-  const HistoryList(this.data, {Key? key}) : super(key: key);
+  HistoryList({Key? key}) : super(key: key);
+
+  @override
+  State<HistoryList> createState() => _HistoryListState();
+}
+
+class _HistoryListState extends State<HistoryList> {
+  List<History>? data;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  _fetchData() async {
+    Isar isar = Isar.getInstance()!;
+    var rows = await isar.historys.where().sortByCreatedAtDesc().findAll();
+    setState(() {
+      data = rows;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return
-      ListView.separated(
-          itemCount: data.length,
+    // return const Text('aaa');
+    return data != null
+      ? ListView.separated(
+          itemCount: data!.length,
           itemBuilder: (_, idx) {
-            Map<String, dynamic> item = data[idx];
-            return HistoryTile(item['id'], item['solution']!,
-                item['problem']!);
+            History item = data![idx];
+            return HistoryTile(item.id!, item.solution, item.problem);
           },
           separatorBuilder: (_, idx) => const Divider(
             color: Colors.grey,
             height: 1,
           ),
-      );
+        )
+      : const EmptyHistoryWidget();
   }
 }
-
 
 
 class HistoryTile extends StatelessWidget {
