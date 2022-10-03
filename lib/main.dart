@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
+import 'app/collections/history.dart';
 import 'app/providers/settings.dart';
+import 'app/theme.dart';
 import './providers/calculator_provider.dart';
 import './routes.dart';
-import 'app/theme.dart';
 
 
 
-void main() {
+void main() async {
+  final dir = await getApplicationSupportDirectory();
+  final isar = await Isar.open(
+      [HistorySchema],
+      directory: dir.path
+  );
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
