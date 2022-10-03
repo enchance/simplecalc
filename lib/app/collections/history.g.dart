@@ -38,7 +38,21 @@ const HistorySchema = CollectionSchema(
   deserialize: _historyDeserialize,
   deserializeProp: _historyDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'createdAt': IndexSchema(
+      id: -3433535483987302584,
+      name: r'createdAt',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'createdAt',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _historyGetId,
@@ -113,10 +127,73 @@ void _historyAttach(IsarCollection<dynamic> col, Id id, History object) {
   object.id = id;
 }
 
+extension HistoryByIndex on IsarCollection<History> {
+  Future<History?> getByCreatedAt(DateTime createdAt) {
+    return getByIndex(r'createdAt', [createdAt]);
+  }
+
+  History? getByCreatedAtSync(DateTime createdAt) {
+    return getByIndexSync(r'createdAt', [createdAt]);
+  }
+
+  Future<bool> deleteByCreatedAt(DateTime createdAt) {
+    return deleteByIndex(r'createdAt', [createdAt]);
+  }
+
+  bool deleteByCreatedAtSync(DateTime createdAt) {
+    return deleteByIndexSync(r'createdAt', [createdAt]);
+  }
+
+  Future<List<History?>> getAllByCreatedAt(List<DateTime> createdAtValues) {
+    final values = createdAtValues.map((e) => [e]).toList();
+    return getAllByIndex(r'createdAt', values);
+  }
+
+  List<History?> getAllByCreatedAtSync(List<DateTime> createdAtValues) {
+    final values = createdAtValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'createdAt', values);
+  }
+
+  Future<int> deleteAllByCreatedAt(List<DateTime> createdAtValues) {
+    final values = createdAtValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'createdAt', values);
+  }
+
+  int deleteAllByCreatedAtSync(List<DateTime> createdAtValues) {
+    final values = createdAtValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'createdAt', values);
+  }
+
+  Future<Id> putByCreatedAt(History object) {
+    return putByIndex(r'createdAt', object);
+  }
+
+  Id putByCreatedAtSync(History object, {bool saveLinks = true}) {
+    return putByIndexSync(r'createdAt', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByCreatedAt(List<History> objects) {
+    return putAllByIndex(r'createdAt', objects);
+  }
+
+  List<Id> putAllByCreatedAtSync(List<History> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'createdAt', objects, saveLinks: saveLinks);
+  }
+}
+
 extension HistoryQueryWhereSort on QueryBuilder<History, History, QWhere> {
   QueryBuilder<History, History, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<History, History, QAfterWhere> anyCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'createdAt'),
+      );
     });
   }
 }
@@ -182,6 +259,96 @@ extension HistoryQueryWhere on QueryBuilder<History, History, QWhereClause> {
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterWhereClause> createdAtEqualTo(
+      DateTime createdAt) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'createdAt',
+        value: [createdAt],
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterWhereClause> createdAtNotEqualTo(
+      DateTime createdAt) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdAt',
+              lower: [],
+              upper: [createdAt],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdAt',
+              lower: [createdAt],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdAt',
+              lower: [createdAt],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdAt',
+              lower: [],
+              upper: [createdAt],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<History, History, QAfterWhereClause> createdAtGreaterThan(
+    DateTime createdAt, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdAt',
+        lower: [createdAt],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterWhereClause> createdAtLessThan(
+    DateTime createdAt, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdAt',
+        lower: [],
+        upper: [createdAt],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterWhereClause> createdAtBetween(
+    DateTime lowerCreatedAt,
+    DateTime upperCreatedAt, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdAt',
+        lower: [lowerCreatedAt],
+        includeLower: includeLower,
+        upper: [upperCreatedAt],
         includeUpper: includeUpper,
       ));
     });

@@ -8,5 +8,6 @@ class History {
   Id? id;
   late String problem;
   late String solution;
+  @Index(unique: true)
   late DateTime createdAt;
 }
