@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
-import '../core/styles.dart';
+import '../app/styles.dart';
 import './calculator_screen.dart';
 import './trading_screen.dart';
 

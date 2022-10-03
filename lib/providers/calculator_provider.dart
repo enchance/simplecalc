@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../core/utils.dart';
+import '../app/utils.dart';
 
 
 class CalculatorProvider with ChangeNotifier {

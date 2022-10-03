@@ -4,7 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
 
 import '../providers/calculator_provider.dart';
-import '../core/styles.dart';
+import '../app/styles.dart';
 
 
 

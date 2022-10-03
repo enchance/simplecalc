@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
-import './core/providers/settings.dart';
+import 'app/providers/settings.dart';
 import './providers/calculator_provider.dart';
 import './routes.dart';
-import './core/theme.dart';
+import 'app/theme.dart';
 
 
 

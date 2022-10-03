@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/calculator_provider.dart';
 import '../widgets/calculator_widgets.dart';
-import '../core/styles.dart';
+import '../app/styles.dart';
 import './history.dart';
 
 

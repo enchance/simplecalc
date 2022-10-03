@@ -131,7 +131,7 @@ class HistoryTile extends StatelessWidget {
     var calc = Provider.of<CalculatorProvider>(context, listen: false);
 
     return Dismissible(
-      key: UniqueKey(),
+      key: ValueKey(id),
       direction: DismissDirection.endToStart,
       onDismissed: (dir) => _handleDelete(context, id),
       background: Container(
