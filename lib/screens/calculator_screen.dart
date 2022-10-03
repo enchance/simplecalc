@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../providers/calculator_provider.dart';
 import '../widgets/calculator_widgets.dart';
 import '../core/styles.dart';
+import './history.dart';
+
 
 
 class CalculatorScreen extends StatefulWidget {
@@ -31,9 +33,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   Widget build(BuildContext context) {
     final calc = Provider.of<CalculatorProvider>(context);
 
-    return Scaffold(
-      backgroundColor: NordTheme.snow3,
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         child: Center(
           child: Container(
             // width: maxWidth > 500 ? 500 : double.infinity,
@@ -62,13 +62,23 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   ),
                   // const SizedBox(height: 10),
                   // const CalcButton('='),
-                  // const SizedBox(height: 15),
+                  const SizedBox(height: 15),
+                  TextButton.icon(
+                      onPressed: () => Navigator.of(context).pushNamed(HistoryScreen.route),
+                      icon: const Icon(Icons.history,
+                        color: Colors.grey,
+                      ),
+                      label: const Text('History',
+                        style: TextStyle(
+                            color: Colors.grey
+                        )
+                      ),
+                  )
                 ],
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
