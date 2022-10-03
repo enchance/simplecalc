@@ -11,55 +11,32 @@ class HistoryScreen extends StatelessWidget {
 
   HistoryScreen({Key? key}) : super(key: key);
 
-  List<Map<String, String>> get data {
+  List<Map<String, dynamic>> get data {
     return [
       {
-        'problem': '1+1',
-        'solution': '2'
+        'id': 1,
+        'problem': '1+5',
+        'solution': '6'
       },
       {
+        'id': 2,
         'problem': '4-2',
         'solution': '2'
       },
       {
+        'id': 3,
         'problem': '7-12',
         'solution': '-5'
       },
       {
-        'problem': '1+1',
-        'solution': '2'
+        'id': 4,
+        'problem': '12.5x3',
+        'solution': '37.5'
       },
       {
-        'problem': '4-2',
-        'solution': '2'
-      },
-      {
-        'problem': '7-12',
-        'solution': '-5'
-      },
-      {
-        'problem': '1+1',
-        'solution': '2'
-      },
-      {
-        'problem': '4-2',
-        'solution': '2'
-      },
-      {
-        'problem': '7-12',
-        'solution': '-5'
-      },
-      {
-        'problem': '1+1',
-        'solution': '2'
-      },
-      {
-        'problem': '4-2',
-        'solution': '2'
-      },
-      {
-        'problem': '7-12',
-        'solution': '-5'
+        'id': 5,
+        'problem': '12÷4',
+        'solution': '3'
       },
     ];
   }
@@ -110,8 +87,9 @@ class HistoryList extends StatelessWidget {
       ListView.separated(
           itemCount: data.length,
           itemBuilder: (_, idx) {
-            Map<String, String> item = data[idx];
-            return HistoryTile(item['solution']!, item['problem']!);
+            Map<String, dynamic> item = data[idx];
+            return HistoryTile(item['id'], item['solution']!,
+                item['problem']!);
           },
           separatorBuilder: (_, idx) => const Divider(
             color: Colors.grey,
@@ -124,10 +102,12 @@ class HistoryList extends StatelessWidget {
 
 
 class HistoryTile extends StatelessWidget {
+  final int id;
   final String title;
   final String subtitle;
 
-  const HistoryTile(this.title, this.subtitle, {Key? key}) : super(key: key);
+  const HistoryTile(this.id, this.title, this.subtitle,  {Key? key}) : super
+      (key: key);
 
   Widget _buildAutoSizeText(String text, {int lines=3, TextStyle? style}) {
     return AutoSizeText(
@@ -138,22 +118,45 @@ class HistoryTile extends StatelessWidget {
     );
   }
 
+  void _handleDelete(BuildContext context, int id) {
+    // TODO: Delete from history
+    print(id);
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Deleted'))
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var calc = Provider.of<CalculatorProvider>(context, listen: false);
 
-    return ListTile(
-      leading: const Icon(Icons.calculate_outlined, size: 40, color: Colors.black38),
-      title: _buildAutoSizeText(title, style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 22,
-          color: Colors.black54
-      )),
-      subtitle: _buildAutoSizeText(subtitle),
-      onTap: () {
-        calc.append(title);
-        Navigator.of(context).pop();
-      },
+    return Dismissible(
+      key: UniqueKey(),
+      direction: DismissDirection.endToStart,
+      onDismissed: (dir) => _handleDelete(context, id),
+      background: Container(
+        alignment: Alignment.centerRight,
+        color: Colors.red,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Icon(Icons.delete, color: Colors.white)
+      ),
+      child: ListTile(
+        leading: const Icon(Icons.calculate_outlined, size: 40, color: Colors.black38),
+        title: _buildAutoSizeText(title, style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            color: Colors.black54
+        )),
+        subtitle: _buildAutoSizeText(subtitle),
+        // trailing: IconButton(
+        //   icon: Icon(Icons.delete),
+        //   onPressed: () => print('Delete $title'),
+        // ),
+        onTap: () {
+          calc.append(title);
+          Navigator.of(context).pop();
+        },
+      ),
     );
   }
 }

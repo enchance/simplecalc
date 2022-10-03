@@ -28,6 +28,9 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+
+isar_version: &isar_version 3.0.0
+
 dependencies:
   flutter:
     sdk: flutter
@@ -37,10 +40,16 @@ dependencies:
   intl: ^0.17.0
   auto_size_text: ^3.0.0
   keyboard_dismisser: ^3.0.0
+  isar: *isar_version
+  isar_flutter_libs: *isar_version # contains Isar Core
+
 
 dev_dependencies:
   # flutter pub run flutter_launcher_icons:main
   flutter_launcher_icons: ^0.10.0
+  isar_generator: *isar_version
+  build_runner: any
+
 
   flutter_test:
     sdk: flutter
