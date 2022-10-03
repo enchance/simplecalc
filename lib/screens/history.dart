@@ -37,7 +37,7 @@ class HistoryScreen extends StatelessWidget {
             ),
             // const SizedBox(height: 2),
             // const Divider(color: Colors.grey),
-            Expanded(child: HistoryList())
+            Expanded(child: HistoryList()),
           ],
         )
       ),
@@ -54,7 +54,7 @@ class HistoryList extends StatefulWidget {
 }
 
 class _HistoryListState extends State<HistoryList> {
-  List<History>? data;
+  List<History> data = [];
 
   @override
   void initState() {
@@ -70,20 +70,34 @@ class _HistoryListState extends State<HistoryList> {
     });
   }
 
+  _removeFromState(int id) {
+    for(int i = 0; i < data.length; i++) {
+      History h = data[i];
+      if(h.id == id) {
+        var datalist = [...data];
+        datalist.removeAt(i);
+        setState(() {
+          data = datalist;
+        });
+        break;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // return const Text('aaa');
-    return data != null
-      ? ListView.separated(
+    return data.isNotEmpty
+      ? ListView.builder(
           itemCount: data!.length,
           itemBuilder: (_, idx) {
             History item = data![idx];
-            return HistoryTile(item.id!, item.solution, item.problem);
+            return HistoryTile(item.id!, item.solution, item.problem, _removeFromState);
           },
-          separatorBuilder: (_, idx) => const Divider(
-            color: Colors.grey,
-            height: 1,
-          ),
+          // separatorBuilder: (_, idx) => const Divider(
+          //   color: Colors.grey,
+          //   height: 1,
+          // ),
         )
       : const EmptyHistoryWidget();
   }
@@ -94,9 +108,9 @@ class HistoryTile extends StatelessWidget {
   final int id;
   final String title;
   final String subtitle;
+  final Function removeFromState;
 
-  const HistoryTile(this.id, this.title, this.subtitle,  {Key? key}) : super
-      (key: key);
+  HistoryTile(this.id, this.title, this.subtitle, this.removeFromState, {Key?key}) : super(key: key);
 
   Widget _buildAutoSizeText(String text, {int lines=3, TextStyle? style}) {
     return AutoSizeText(
@@ -107,9 +121,18 @@ class HistoryTile extends StatelessWidget {
     );
   }
 
-  void _handleDelete(BuildContext context, int id) {
-    // TODO: Delete from history
-    print(id);
+  void _handleDelete(BuildContext context, int id) async {
+    Isar isar = Isar.getInstance()!;
+
+    await isar.writeTxn(() async {
+      final history = await isar.historys.get(id);
+      if(history != null) {
+        await isar.historys.delete(id);
+      }
+    });
+
+    removeFromState(id);
+
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Deleted'))
     );
@@ -130,6 +153,7 @@ class HistoryTile extends StatelessWidget {
         child: Icon(Icons.delete, color: Colors.white)
       ),
       child: ListTile(
+        // key: ValueKey(id),
         leading: const Icon(Icons.calculate_outlined, size: 40, color: Colors.black38),
         title: _buildAutoSizeText(title, style: const TextStyle(
             fontWeight: FontWeight.bold,
@@ -137,10 +161,9 @@ class HistoryTile extends StatelessWidget {
             color: Colors.black54
         )),
         subtitle: _buildAutoSizeText(subtitle),
-        // trailing: IconButton(
-        //   icon: Icon(Icons.delete),
-        //   onPressed: () => print('Delete $title'),
-        // ),
+        shape: const Border(
+          bottom: BorderSide(color: Color(0xFFBDBDBD)),
+        ),
         onTap: () {
           calc.append(title);
           Navigator.of(context).pop();
