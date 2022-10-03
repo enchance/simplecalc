@@ -4,21 +4,26 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
-import 'app/collections/history.dart';
-import 'app/providers/settings.dart';
-import 'app/theme.dart';
+import './app/collections/history.dart';
+import './app/providers/settings.dart';
+import './app/theme.dart';
 import './providers/calculator_provider.dart';
 import './routes.dart';
+import './providers/db_provider.dart';
+import './screens/index.dart';
 
 
 
 void main() async {
-  final dir = await getApplicationSupportDirectory();
-  final isar = await Isar.open(
-      [HistorySchema],
-      directory: dir.path
-  );
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Init Isar
+  final dir = await getApplicationSupportDirectory();
+  await Isar.open(
+    [HistorySchema],
+    directory: dir.path,
+  );
+
   runApp(const MyApp());
 }
 
@@ -27,6 +32,7 @@ void main() async {
 // }
 
 class MyApp extends StatefulWidget {
+
   const MyApp({super.key});
 
   @override
@@ -36,6 +42,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+
     // Prevent landscape mode
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -46,6 +53,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (_) => CalculatorProvider()),
         ChangeNotifierProvider(create: (_) => Settings()),
+        ChangeNotifierProvider(create: (_) => DBProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -68,6 +76,6 @@ List<Widget> buildHeadlineText(BuildContext context, String text,
         style: Theme.of(context).textTheme.headline1,
       ),
     ),
-    SizedBox(height: 20),
+    const SizedBox(height: 20),
   ];
 }

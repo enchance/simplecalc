@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
+import 'package:provider/provider.dart';
+import 'package:isar/isar.dart';
 
 import '../app/styles.dart';
 import './calculator_screen.dart';
 import './trading_screen.dart';
+import '../providers/db_provider.dart';
 
 
 
 class IndexScreen extends StatefulWidget {
-  const IndexScreen({Key? key}) : super(key: key);
+
+  IndexScreen({Key? key}) : super(key: key);
 
   @override
   State<IndexScreen> createState() => _IndexScreenState();
@@ -40,6 +44,7 @@ class _IndexScreenState extends State<IndexScreen> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+
     return KeyboardDismisser(
       child: Scaffold(
           appBar: PreferredSize(

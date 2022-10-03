@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
 
 import '../providers/calculator_provider.dart';
 import '../app/styles.dart';
+import '../providers/db_provider.dart';
 
 
 
@@ -96,18 +98,18 @@ class _CalcButtonState extends State<CalcButton> {
     );
   }
 
-  void _negpos(CalculatorProvider calc) {
-    var chars = calc.equation.characters;
-    List<String> valid = ['1', '2', '3', '4', '5', '6', '7', '8', '9',
-                          '0', '.', ','];
-    for(var i = 0; i < chars.length; i++) {
-      if(i == 0 && calc.equation[i] == '-') continue;
-      // if(calc.equation[i] == ',') continue;
-      if(!valid.contains(calc.equation[i])) return;
-    }
-    calc.append('x-1');
-    calc.compute();
-  }
+  // void _negpos(CalculatorProvider calc) {
+  //   var chars = calc.equation.characters;
+  //   List<String> valid = ['1', '2', '3', '4', '5', '6', '7', '8', '9',
+  //                         '0', '.', ','];
+  //   for(var i = 0; i < chars.length; i++) {
+  //     if(i == 0 && calc.equation[i] == '-') continue;
+  //     // if(calc.equation[i] == ',') continue;
+  //     if(!valid.contains(calc.equation[i])) return;
+  //   }
+  //   calc.append('x-1');
+  //   calc.compute();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -204,13 +206,13 @@ class _CalcButtonState extends State<CalcButton> {
           ],
         );
 
-      case '+/-':
-        return GestureDetector(
-            onTap: () => _negpos(calc),
-            child: CalcContent(
-                color: tintColor(Colors.grey, 0.3),
-                value: widget.value)
-        );
+      // case '+/-':
+      //   return GestureDetector(
+      //       onTap: () => _negpos(calc),
+      //       child: CalcContent(
+      //           color: tintColor(Colors.grey, 0.3),
+      //           value: widget.value)
+      //   );
 
       case 'C':
         return GestureDetector(
@@ -233,7 +235,7 @@ class _CalcButtonState extends State<CalcButton> {
             onTap: () => calc.pop(),
             child: CalcContent(
                 color: tintColor(Colors.grey, 0.3),
-                value: Icon(Icons.backspace, color: Colors.white,)
+                value: const Icon(Icons.backspace, color: Colors.white,)
             )
         );
 

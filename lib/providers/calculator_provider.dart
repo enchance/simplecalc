@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
+import 'package:math_expressions/math_expressions.dart';
 
+import '../app/collections/history.dart';
 import '../app/utils.dart';
 
 
@@ -35,16 +38,28 @@ class CalculatorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  String compute() {
-    // final f = NumberFormat('#,##0.00', 'en_US');
+  Future<String> compute() async {
+    final Isar isar = Isar.getInstance()!;
+    final history = History()
+      ..problem=_equation..createdAt=DateTime.now();
 
     String cleanStr = _equation;
     cleanStr = cleanStr.replaceAll('x', '*').replaceAll(',', '');
     cleanStr = cleanStr.replaceAll('÷', '/').replaceAll(',', '');
 
-    _equation = humanize(cleanStr);
-    notifyListeners();
+    // Solve
+    Parser p = Parser();
+    Expression exp = p.parse(cleanStr);
+    double eval = exp.evaluate(EvaluationType.REAL, ContextModel());
+    _equation = humanize(eval);
 
+    // Save to db
+    history.solution = _equation;
+    await isar.writeTxn(() async {
+      await isar.historys.put(history);
+    });
+
+    notifyListeners();
     return _equation;
   }
 }

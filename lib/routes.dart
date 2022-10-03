@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 
 import './screens/history.dart';
 import './screens/index.dart';
