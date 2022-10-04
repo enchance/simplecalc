@@ -3,7 +3,7 @@ import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
-import '../providers/calculator_provider.dart';
+import '../app/providers/calculator_provider.dart';
 import '../app/collections/history.dart';
 
 

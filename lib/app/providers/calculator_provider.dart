@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:math_expressions/math_expressions.dart';
 
-import '../app/collections/history.dart';
-import '../app/utils.dart';
+import 'settings_provider.dart';
+import '../collections/history.dart';
+import '../utils.dart';
 
 
 class CalculatorProvider with ChangeNotifier {

@@ -1,12 +1,10 @@
-import 'package:SimpleCalc/app/providers/settings.dart';
+import 'package:SimpleCalc/app/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/calculator_provider.dart';
+import '../app/providers/calculator_provider.dart';
 import '../widgets/calculator_widgets.dart';
-import '../app/styles.dart';
 import './history_screen.dart';
-import './settings_screen.dart';
 
 
 
@@ -34,11 +32,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     final calc = Provider.of<CalculatorProvider>(context);
-
-    String aaa = Provider.of<Settings>(context, listen: false).foo();
-    print('-$aaa-');
-    String bbb = Provider.of<CalculatorProvider>(context, listen: false).talk();
-    print('+$bbb+');
 
     return SingleChildScrollView(
         child: Center(
