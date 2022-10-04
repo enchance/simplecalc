@@ -196,7 +196,7 @@ class EmptyHistoryWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.hourglass_empty,
+          Icon(Icons.history_outlined,
               size: 100,
               color: tintColor(Colors.grey, 0.5),
           ),

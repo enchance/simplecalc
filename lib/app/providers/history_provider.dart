@@ -40,7 +40,6 @@ class HistoryProvider with ChangeNotifier {
     await isar.writeTxn(() async {
       await isar.historys.where().idGreaterThan(0).deleteAll();
     });
-    print('History clean!');
   }
 
 }

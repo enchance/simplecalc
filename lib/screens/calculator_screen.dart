@@ -65,7 +65,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   const SizedBox(height: 15),
                   TextButton.icon(
                       onPressed: () => Navigator.of(context).pushNamed(HistoryScreen.route),
-                      icon: const Icon(Icons.history,
+                      icon: const Icon(Icons.history_outlined,
                         color: Colors.grey,
                       ),
                       label: const Text('View History',
