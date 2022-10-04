@@ -1,4 +1,5 @@
 import 'package:SimpleCalc/app/providers/history_provider.dart';
+import 'package:SimpleCalc/app/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +58,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Tap to copy to equation'),
+                    const Text('Tap to copy'),
                     TextButton.icon(
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.red
@@ -195,10 +196,13 @@ class EmptyHistoryWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.hourglass_empty, size: 100, color: Colors.grey),
+          Icon(Icons.hourglass_empty,
+              size: 100,
+              color: tintColor(Colors.grey, 0.5),
+          ),
           Text('Nothing to see here',
             style: TextStyle(
-              color: Colors.grey,
+              color: tintColor(Colors.grey, 0.3),
               fontSize: Theme.of(context).textTheme.headline1!.fontSize
             )
           )
