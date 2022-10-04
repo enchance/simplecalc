@@ -7,10 +7,16 @@ import '../providers/calculator_provider.dart';
 import '../app/collections/history.dart';
 
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
   static const route = '/history';
 
   HistoryScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +31,56 @@ class HistoryScreen extends StatelessWidget {
           children: [
             // const SizedBox(height: 20),
             Container(
-              width: double.infinity,
-              color: Colors.grey[300],
-              padding: const EdgeInsets.only(
-                top: 20,
-                right: 20,
-                bottom: 10,
-                left: 20
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: Colors.grey)
+                )
               ),
-              child: const Text('Tap to append to your equation'),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Tap to copy to equation'),
+                  TextButton.icon(
+                      onPressed: _clearHistory,
+                      icon: const Icon(Icons.delete_forever),
+                      label: const Text('Clear History')
+                  )
+                ]
+              ),
             ),
-            // const SizedBox(height: 2),
-            // const Divider(color: Colors.grey),
+            // Container(
+            //   width: double.infinity,
+            //   color: Colors.grey[300],
+            //   padding: const EdgeInsets.only(
+            //     top: 20,
+            //     right: 20,
+            //     bottom: 10,
+            //     left: 20
+            //   ),
+            //   child:
+            // ),
+            // // const SizedBox(height: 2),
+            // // const Divider(color: Colors.grey),
+            // Container(
+            //   width: double.infinity,
+            //   decoration: BoxDecoration(
+            //     border: Border(
+            //         bottom: BorderSide(color: Colors.grey)
+            //     )
+            //   ),
+            //   child: TextButton
+            // ),
             Expanded(child: HistoryList()),
           ],
         )
       ),
     );
+  }
+
+  _clearHistory() async {
+    Isar isar = Isar.getInstance()!;
+    await isar.historys.where().idGreaterThan(0).deleteAll();
   }
 }
 
@@ -132,10 +171,6 @@ class HistoryTile extends StatelessWidget {
     });
 
     removeFromState(id);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Deleted'))
-    );
   }
 
   @override

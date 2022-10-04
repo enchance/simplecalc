@@ -6,7 +6,6 @@ import 'package:isar/isar.dart';
 import '../app/styles.dart';
 import './calculator_screen.dart';
 import './trading_screen.dart';
-import '../providers/db_provider.dart';
 
 
 

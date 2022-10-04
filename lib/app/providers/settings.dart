@@ -1,3 +1,4 @@
+import 'package:SimpleCalc/providers/calculator_provider.dart';
 import 'package:flutter/material.dart';
 
 
@@ -7,5 +8,9 @@ class BaseSettings {
 
 
 class Settings extends BaseSettings with ChangeNotifier {
-  var copyright = 2022;
+  CalculatorProvider? calc;
+
+  Settings([this.calc]);
+
+  String foo() => calc!.talk();
 }

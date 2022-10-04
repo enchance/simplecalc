@@ -11,6 +11,8 @@ class CalculatorProvider with ChangeNotifier {
 
   String get equation => _equation;
 
+  String talk() => 'Hello there';
+
   void append(String char) {
     if(_equation.isNotEmpty) {
       String lastChar = _equation[_equation.length - 1];

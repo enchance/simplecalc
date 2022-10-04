@@ -9,8 +9,6 @@ import './app/providers/settings.dart';
 import './app/theme.dart';
 import './providers/calculator_provider.dart';
 import './routes.dart';
-import './providers/db_provider.dart';
-import './screens/index.dart';
 
 
 
@@ -51,9 +49,19 @@ class _MyAppState extends State<MyApp> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => CalculatorProvider()),
-        ChangeNotifierProvider(create: (_) => Settings()),
-        ChangeNotifierProvider(create: (_) => DBProvider()),
+        ChangeNotifierProvider(create: (context) => CalculatorProvider()),
+        // ChangeNotifierProxyProvider<CalculatorProvider, Settings>(
+        //   create: (context) => Settings(),
+        //   update: (context, calc, settings) => Settings(calc),
+        // ),
+
+        // Passing CalculatorProvider like this is ok as long as it NEVER
+        // changes since the change would not be reflected. In fact, passing
+        // values in the constructor will assume it will never change so
+        // don't do it UNLESS it's really not meant to change.
+        ChangeNotifierProvider(create: (_) => Settings(CalculatorProvider()))
+
+        // ChangeNotifierProvider(create: (_) => Settings()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
