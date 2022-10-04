@@ -217,7 +217,7 @@ class _CalcButtonState extends State<CalcButton> {
         return GestureDetector(
           onTap: () => calc.clear(),
           child: CalcContent(
-            color: tintColor(Colors.grey, 0.3),
+            color: shadeColor(Colors.grey, 0.2),
             value: widget.value
           )
         );

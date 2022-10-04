@@ -13,23 +13,34 @@ class HistoryProvider with ChangeNotifier {
 
   SettingsProvider get settings => _settings;
 
-  _addHistory(History history) async {
+  // TODO: Populate datalist
+  // TODO: Remove from the list
+  // TODO: Read from the list
+
+  addHistory(History history) async {
+    // Save to db
     Isar isar = Isar.getInstance()!;
     await isar.writeTxn(() async {
       await isar.historys.put(history);
     });
   }
 
-  // // _removeHistory(int id) => _data.removeWhere((element) => element.id == id);
-  //
-  // Future<List<History>> _fetchHistoryList() async {
-  //   Isar isar = Isar.getInstance()!;
-  //   return await isar.historys.where().sortByCreatedAtDesc().findAll();
-  // }
-  //
-  // _clearHistory() async {
-  //   Isar isar = Isar.getInstance()!;
-  //   await isar.historys.where().idGreaterThan(0).deleteAll();
-  // }
+  removeHistory(int id) async {
+    Isar isar = Isar.getInstance()!;
+    await isar.writeTxn(() async => await isar.historys.delete(id));
+  }
+
+  Future<List<History>> fetchHistoryList() async {
+    Isar isar = Isar.getInstance()!;
+    return await isar.historys.where().sortByCreatedAtDesc().findAll();
+  }
+
+  clearHistory() async {
+    Isar isar = Isar.getInstance()!;
+    await isar.writeTxn(() async {
+      await isar.historys.where().idGreaterThan(0).deleteAll();
+    });
+    print('History clean!');
+  }
 
 }

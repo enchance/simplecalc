@@ -1,3 +1,4 @@
+import 'package:SimpleCalc/app/providers/history_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,21 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  List<History> data = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initData();
+  }
+
+  _initData() async {
+    Isar isar = Isar.getInstance()!;
+    var rows = await isar.historys.where().sortByCreatedAtDesc().findAll();
+    setState(() {
+      data = rows;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,109 +45,76 @@ class _HistoryScreenState extends State<HistoryScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // const SizedBox(height: 20),
-            Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey)
-                )
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Tap to copy to equation'),
-                  TextButton.icon(
-                      onPressed: _clearHistory,
-                      icon: const Icon(Icons.delete_forever),
-                      label: const Text('Clear History')
+
+            if(data.isNotEmpty)
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: Colors.grey)
                   )
-                ]
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Tap to copy to equation'),
+                    TextButton.icon(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.red
+                      ),
+                      onPressed: () => _clearHistory(context),
+                      icon: const Icon(Icons.delete_forever,
+                        color: Colors.red,
+                      ),
+                      label: const Text('Clear History')
+                    )
+                  ]
+                ),
               ),
-            ),
-            // Container(
-            //   width: double.infinity,
-            //   color: Colors.grey[300],
-            //   padding: const EdgeInsets.only(
-            //     top: 20,
-            //     right: 20,
-            //     bottom: 10,
-            //     left: 20
-            //   ),
-            //   child:
-            // ),
-            // // const SizedBox(height: 2),
-            // // const Divider(color: Colors.grey),
-            // Container(
-            //   width: double.infinity,
-            //   decoration: BoxDecoration(
-            //     border: Border(
-            //         bottom: BorderSide(color: Colors.grey)
-            //     )
-            //   ),
-            //   child: TextButton
-            // ),
-            Expanded(child: HistoryList()),
+
+            Expanded(child: HistoryList(data, removeFromState)),
           ],
         )
       ),
     );
   }
 
-  _clearHistory() async {
-    Isar isar = Isar.getInstance()!;
-    await isar.historys.where().idGreaterThan(0).deleteAll();
+  _clearHistory(BuildContext context) async {
+    await Provider.of<HistoryProvider>(context, listen: false).clearHistory();
+    setState(() => data = []);
   }
+
+  removeFromState(int id) {
+    List<History> filteredData = [...data];
+    filteredData.removeWhere((item) => item.id == id);
+    setState(() {
+      data = filteredData;
+    });
+  }
+
 }
 
 class HistoryList extends StatefulWidget {
+  List<History> data = [];
+  final Function removeFromState;
 
-  HistoryList({Key? key}) : super(key: key);
+  HistoryList(this.data, this.removeFromState, {Key? key}) : super(key: key);
 
   @override
   State<HistoryList> createState() => _HistoryListState();
 }
 
 class _HistoryListState extends State<HistoryList> {
-  List<History> data = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchData();
-  }
-
-  _fetchData() async {
-    Isar isar = Isar.getInstance()!;
-    var rows = await isar.historys.where().sortByCreatedAtDesc().findAll();
-    setState(() {
-      data = rows;
-    });
-  }
-
-  _removeFromState(int id) {
-    for(int i = 0; i < data.length; i++) {
-      History h = data[i];
-      if(h.id == id) {
-        var datalist = [...data];
-        datalist.removeAt(i);
-        setState(() {
-          data = datalist;
-        });
-        break;
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     // return const Text('aaa');
-    return data.isNotEmpty
+    return widget.data.isNotEmpty
       ? ListView.builder(
-          itemCount: data!.length,
+          itemCount: widget.data.length,
           itemBuilder: (_, idx) {
-            History item = data![idx];
-            return HistoryTile(item.id!, item.solution, item.problem, _removeFromState);
+            History item = widget.data[idx];
+            return HistoryTile(item.id!, item.solution, item.problem,
+                widget.removeFromState);
           },
           // separatorBuilder: (_, idx) => const Divider(
           //   color: Colors.grey,
@@ -149,7 +132,8 @@ class HistoryTile extends StatelessWidget {
   final String subtitle;
   final Function removeFromState;
 
-  HistoryTile(this.id, this.title, this.subtitle, this.removeFromState, {Key?key}) : super(key: key);
+  const HistoryTile(this.id, this.title, this.subtitle, this.removeFromState,
+      {Key?key}) : super(key: key);
 
   Widget _buildAutoSizeText(String text, {int lines=3, TextStyle? style}) {
     return AutoSizeText(
@@ -161,15 +145,7 @@ class HistoryTile extends StatelessWidget {
   }
 
   void _handleDelete(BuildContext context, int id) async {
-    Isar isar = Isar.getInstance()!;
-
-    await isar.writeTxn(() async {
-      final history = await isar.historys.get(id);
-      if(history != null) {
-        await isar.historys.delete(id);
-      }
-    });
-
+    Provider.of<HistoryProvider>(context, listen: false).removeHistory(id);
     removeFromState(id);
   }
 

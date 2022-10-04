@@ -5,9 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
 import './app/collections/history.dart';
-import './app/providers/settings_provider.dart';
 import './app/theme.dart';
-import 'app/providers/calculator_provider.dart';
+import './app/providers/settings_provider.dart';
+import './app/providers/calculator_provider.dart';
+import './app/providers/history_provider.dart';
 import './routes.dart';
 
 
@@ -49,7 +50,12 @@ class _MyAppState extends State<MyApp> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => CalculatorProvider()),
+        ChangeNotifierProvider(create: (_) => HistoryProvider()),
+        ChangeNotifierProxyProvider<HistoryProvider, CalculatorProvider>(
+            create: (_) => CalculatorProvider(),
+            update: (_, history, calc) => calc!..history = history
+        ),
+
         // ChangeNotifierProxyProvider<CalculatorProvider, Settings>(
         //   create: (context) => Settings(),
         //   update: (context, calc, settings) => Settings(calc),

@@ -5,10 +5,14 @@ import 'package:math_expressions/math_expressions.dart';
 import 'settings_provider.dart';
 import '../collections/history.dart';
 import '../utils.dart';
+import './history_provider.dart';
 
 
 class CalculatorProvider with ChangeNotifier {
+  HistoryProvider? _history;
   String _equation = '';
+
+  set history(HistoryProvider provider) => _history = provider;
 
   String get equation => _equation;
 
@@ -58,9 +62,7 @@ class CalculatorProvider with ChangeNotifier {
 
     // Save to db
     history.solution = _equation;
-    await isar.writeTxn(() async {
-      await isar.historys.put(history);
-    });
+    _history!.addHistory(history);
 
     notifyListeners();
     return _equation;
