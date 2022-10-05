@@ -47,6 +47,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('BUILDING');
     return Scaffold(
       appBar: AppBar(
         title: const Text('History')
@@ -82,30 +83,35 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
 
           Expanded(
-            child: FutureBuilder(
-                future: futureData,
-                builder: (context, snapshot) {
-                  // return Text('aaa');
-                  switch(snapshot.connectionState) {
-                    case ConnectionState.done:
-                      return data.isNotEmpty
-                        ? ListView.builder(
-                          controller: _scrollController,
-                          itemCount: data.length,
-                          itemBuilder: (_, idx) {
-                            History item = data[idx];
-                            return HistoryTile(item.id!, item.solution, item.problem,
-                                removeFromState);
-                          }
-                        )
-                        : const EmptyHistoryWidget();
+            child: RefreshIndicator(
+              onRefresh: () async => setState(() {
+                futureData = _fetchData();
+              }),
+              child: FutureBuilder(
+                  future: futureData,
+                  builder: (context, snapshot) {
+                    switch(snapshot.connectionState) {
+                      case ConnectionState.done:
+                        return data.isNotEmpty
+                          ? ListView.builder(
+                              controller: _scrollController,
+                              itemCount: data.length,
+                              itemBuilder: (_, idx) {
+                                History item = data[idx];
+                                return HistoryTile(item.id!, item.solution, item.problem,
+                                    removeFromState);
+                              }
+                            )
+                          : const EmptyHistoryWidget();
 
-                    default:
-                      return const Center(
-                          child: CircularProgressIndicator()
-                      );
+                      default:
+                        print('GETTING DATA');
+                        return const Center(
+                            child: CircularProgressIndicator()
+                        );
+                    }
                   }
-                }
+              ),
             )
           ),
         ],
