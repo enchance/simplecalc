@@ -11,6 +11,7 @@ import './history_provider.dart';
 class CalculatorProvider with ChangeNotifier {
   HistoryProvider? _history;
   String _equation = '';
+  bool startAgain = false;
 
   set history(HistoryProvider provider) => _history = provider;
 
@@ -18,16 +19,23 @@ class CalculatorProvider with ChangeNotifier {
 
   String talk() => 'Hello there';
 
+  setStartAgain(bool val) => startAgain = val;
+
   void append(String char) {
+    List<String> operators = ['+', '-', 'x', '÷'];
+
+    if(startAgain && !operators.contains(char)) _equation = '';
+
     if(_equation.isNotEmpty) {
       String lastChar = _equation[_equation.length - 1];
-      List<String> operators = ['+', '-', 'x', '÷'];
       if(operators.contains(lastChar) && operators.contains(char)) {
         _equation = _equation.substring(0, _equation.length - 1);
       }
     }
     _equation += char;
     notifyListeners();
+
+    if(startAgain) setStartAgain(false);
   }
 
   String pop() {
@@ -65,6 +73,7 @@ class CalculatorProvider with ChangeNotifier {
     _history!.addHistory(history);
 
     notifyListeners();
+    setStartAgain(true);
     return _equation;
   }
 }

@@ -87,6 +87,7 @@ class _CalcButtonState extends State<CalcButton> {
         }
       }
       calc.append(finalStr);
+
     }
   }
 
