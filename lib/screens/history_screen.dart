@@ -21,20 +21,21 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   final ScrollController _scrollController = ScrollController();
   late Future futureData;
-  List<History> data = [];
-
   var page = 1;
+  bool more = true;
+  bool isLoading = false;
+  List<History> data = [];
 
   @override
   void initState() {
     super.initState();
-    // fetchData();
+
     futureData = _fetchData();
 
     _scrollController.addListener(() {
       if(_scrollController.position.pixels >= _scrollController.position
           .maxScrollExtent) {
-        print('You are at the end');
+        _fetchData();
       }
     });
   }
@@ -47,7 +48,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('BUILDING');
     return Scaffold(
       appBar: AppBar(
         title: const Text('History')
@@ -59,9 +59,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
           if(data.isNotEmpty)
             Container(
               decoration: const BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey)
-                )
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black38,
+                    blurRadius: 5,
+                    offset: Offset(0, 2)
+                  )
+                ]
               ),
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Row(
@@ -85,6 +90,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async => setState(() {
+                // Reset everything
+                more = true;
+                isLoading = false;
+                page = 1;
+                data.clear();
                 futureData = _fetchData();
               }),
               child: FutureBuilder(
@@ -95,19 +105,30 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         return data.isNotEmpty
                           ? ListView.builder(
                               controller: _scrollController,
-                              itemCount: data.length,
+                              itemCount: data.length + 1,
                               itemBuilder: (_, idx) {
-                                History item = data[idx];
-                                return HistoryTile(item.id!, item.solution, item.problem,
-                                    removeFromState);
+                                if(idx < data.length) {
+                                  History item = data[idx];
+                                  return HistoryTile(item.id!, item.solution, item.problem,
+                                      removeFromState);
+                                }
+                                else {
+                                  return more
+                                    ? const Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                        child: Center(
+                                          child: CircularProgressIndicator()
+                                        )
+                                      )
+                                    : const SizedBox(width: 0);
+                                }
                               }
                             )
                           : const EmptyHistoryWidget();
 
                       default:
-                        print('GETTING DATA');
                         return const Center(
-                            child: CircularProgressIndicator()
+                          child: CircularProgressIndicator()
                         );
                     }
                   }
@@ -120,14 +141,26 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Future _fetchData() async {
+    if(!more || isLoading) return;
+    isLoading = true;
+
     // Simulate delays
     await Future.delayed(const Duration(seconds: 1));
 
     Isar isar = Isar.getInstance()!;
-    List<History> rows = await isar.historys.where().sortByCreatedAtDesc().findAll();
+    List<History> rows = await isar.historys.where().sortByCreatedAtDesc()
+      .offset((page - 1) * 10).limit(10 + 1).findAll();
 
     setState(() {
-      data = rows;
+      isLoading = false;
+      if(rows.length < 10 + 1) {
+        more = false;
+      }
+      else {
+        rows.removeLast();
+      }
+      data.addAll(rows);
+      page++;
     });
   }
 
