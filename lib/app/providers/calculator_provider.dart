@@ -23,8 +23,9 @@ class CalculatorProvider with ChangeNotifier {
 
   void append(String char) {
     List<String> operators = ['+', '-', 'x', '÷'];
+    List<String> numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.`'];
 
-    if(startAgain && !operators.contains(char) && char == '+/-') _equation = '';
+    if(startAgain && numbers.contains(char)) _equation = '';
 
     if(_equation.isNotEmpty) {
       String lastChar = _equation[_equation.length - 1];
