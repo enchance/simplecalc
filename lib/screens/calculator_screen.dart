@@ -1,6 +1,7 @@
 import 'package:SimpleCalc/app/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 import '../app/providers/calculator_provider.dart';
 import '../widgets/calculator_widgets.dart';
@@ -22,11 +23,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   final List<String> _buttons = [
     // 'C', 'MR', 'M+', 'del',
     // '(', ')', 'M-', '÷',
-    'C', 'M', 'del', '÷',
+    'C', 'paste', 'del', '÷',
     '7', '8', '9', 'x',
     '4', '5', '6', '-',
     '1', '2', '3', '+',
-    '()', '0', '.', '=',
+    '+/-', '0', '.', '=',
   ];
 
   @override
@@ -46,7 +47,19 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-                  Display(calc.equation, 22),
+                  Stack(
+                    children: [
+                      Display(calc.equation, 22),
+                      Positioned(
+                        top: -10, left: -10,
+                        child: IconButton(
+                          iconSize: 16,
+                            onPressed: () => _copy(context, calc.equation),
+                            icon: Icon(Icons.copy, color: Colors.grey.withOpacity(1),),
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 20),
                   const SizedBox(height: 5),
                   GridView(
@@ -80,5 +93,15 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           ),
         ),
       );
+  }
+
+  void _copy(BuildContext context, String data, [bool inform=true]) async {
+    data = data.replaceAll(',', '');
+    await Clipboard.setData(ClipboardData(text: data));
+    if(inform) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Copied'))
+      );
+    }
   }
 }

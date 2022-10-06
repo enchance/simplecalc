@@ -59,58 +59,6 @@ class CalcButton extends StatefulWidget {
 class _CalcButtonState extends State<CalcButton> {
   var dot = true;
 
-  void _copy(BuildContext context, String data, [bool inform=true]) async {
-    data = data.replaceAll(',', '');
-    await Clipboard.setData(ClipboardData(text: data));
-    if(inform) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Saved'))
-      );
-    }
-  }
-
-  void _paste(CalculatorProvider calc) async {
-    ClipboardData? cbdata = await Clipboard.getData('text/plain');
-    if(cbdata != null) {
-      String chars = cbdata.text as String;
-
-      var finalStr = '';
-      for(int i = 0; i < chars.length; i++) {
-        if([
-          '/', '(', ')',
-          '7', '8', '9', 'x',
-          '4', '5', '6', '-',
-          '1', '2', '3', '+',
-          '0', '.'
-        ].contains(chars[i])) {
-          finalStr += chars[i];
-        }
-      }
-      calc.append(finalStr);
-
-    }
-  }
-
-  void _clearClipboard(BuildContext context) {
-    _copy(context, '', false);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Memory cleared'))
-    );
-  }
-
-  // void _negpos(CalculatorProvider calc) {
-  //   var chars = calc.equation.characters;
-  //   List<String> valid = ['1', '2', '3', '4', '5', '6', '7', '8', '9',
-  //                         '0', '.', ','];
-  //   for(var i = 0; i < chars.length; i++) {
-  //     if(i == 0 && calc.equation[i] == '-') continue;
-  //     // if(calc.equation[i] == ',') continue;
-  //     if(!valid.contains(calc.equation[i])) return;
-  //   }
-  //   calc.append('x-1');
-  //   calc.compute();
-  // }
-
   @override
   Widget build(BuildContext context) {
     final calc = Provider.of<CalculatorProvider>(context, listen: false);
@@ -148,71 +96,45 @@ class _CalcButtonState extends State<CalcButton> {
             )
         );
 
-      case '()':
-        return Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                    onTap: () => calc.append('('),
-                    child: CalcContent(
-                      color: tintColor(Colors.grey, 0.3),
-                      value: '(',
-                      fontSize: 20,
-                      radius: 'left',
-                    )
-                ),
-              ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: GestureDetector(
-                    onTap: () => calc.append(')'),
-                    child: CalcContent(
-                      color: tintColor(Colors.grey, 0.3),
-                      value: ')',
-                      fontSize: 20,
-                      radius: 'right',
-                    )
-                ),
-              ),
-            ]
+      case '(':
+      case ')':
+        return GestureDetector(
+            onTap: () => calc.append(widget.value),
+            child: CalcContent(
+              color: tintColor(Colors.grey, 0.3),
+              value: '(',
+              fontSize: 20,
+              radius: 'left',
+            )
         );
 
-      case 'M':
-        return Column(
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () => _copy(context, calc.equation),
-                child: CalcContent(
-                  color: tintColor(Colors.grey, 0.3),
-                  value: 'M+',
-                  fontSize: 20,
-                  radius: 'top',
-                )
-              ),
-            ),
-            const SizedBox(height: 6),
-            Expanded(
-              child: GestureDetector(
-                onTap: () => _paste(calc),
-                child: CalcContent(
-                  color: tintColor(Colors.grey, 0.3),
-                  value: 'MR',
-                  fontSize: 20,
-                  radius: 'bottom',
-                )
-              ),
-            ),
-          ],
-        );
-
-      // case '+/-':
+      // case 'M+':
       //   return GestureDetector(
-      //       onTap: () => _negpos(calc),
+      //       onTap: () => _copy(context, calc.equation),
       //       child: CalcContent(
-      //           color: tintColor(Colors.grey, 0.3),
-      //           value: widget.value)
+      //         color: tintColor(Colors.grey, 0.3),
+      //         value: 'M+',
+      //         fontSize: 20,
+      //       )
       //   );
+
+      case 'MR':
+        return GestureDetector(
+            onTap: () => _paste(calc),
+            child: CalcContent(
+              color: tintColor(Colors.grey, 0.3),
+              value: 'MR',
+              fontSize: 20,
+            )
+        );
+
+      case '+/-':
+        return GestureDetector(
+            onTap: () => _negpos(calc),
+            child: CalcContent(
+                color: tintColor(Colors.grey, 0.3),
+                value: widget.value)
+        );
 
       case 'C':
         return GestureDetector(
@@ -239,11 +161,63 @@ class _CalcButtonState extends State<CalcButton> {
             )
         );
 
+      case 'paste':
+        return GestureDetector(
+            onTap: () => _paste(calc),
+            child: CalcContent(
+                color: tintColor(Colors.grey, 0.3),
+                value: const Icon(Icons.paste, color: Colors.white,)
+            )
+        );
+
       default:
         return Container(width: 0);
     }
     // return CalcContent(color: Colors.grey, value: widget.value);
   }
+
+  void _negpos(CalculatorProvider calc) {
+    var chars = calc.equation.characters;
+    List<String> valid = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', ','];
+
+    for(var i = 0; i < chars.length; i++) {
+      if(i == 0 && calc.equation[i] == '-') continue;
+      // if(calc.equation[i] == ',') continue;
+      if(!valid.contains(calc.equation[i])) return;
+    }
+
+    calc.append('x-1');
+    calc.compute();
+  }
+
+  void _paste(CalculatorProvider calc) async {
+    ClipboardData? cbdata = await Clipboard.getData('text/plain');
+    if(cbdata != null) {
+      String chars = cbdata.text as String;
+
+      var finalStr = '';
+      for(int i = 0; i < chars.length; i++) {
+        if([
+          '/', '(', ')',
+          '7', '8', '9', 'x',
+          '4', '5', '6', '-',
+          '1', '2', '3', '+',
+          '0', '.'
+        ].contains(chars[i])) {
+          finalStr += chars[i];
+        }
+      }
+      calc.append(finalStr);
+
+    }
+  }
+
+  // void _clearClipboard(BuildContext context) {
+  //   _copy(context, '', false);
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Memory cleared'))
+  //   );
+  // }
 }
 
 class CalcContent extends StatelessWidget {
@@ -253,6 +227,7 @@ class CalcContent extends StatelessWidget {
   final bool useGradient;
   final double fontSize;
   final String radius;
+  // final double padding;
 
   const CalcContent({
     required this.color,
