@@ -49,6 +49,7 @@ class EndlessListView<T extends History> extends StatefulWidget {
   final Function(int, int) fetchData;
   final Function(BuildContext, T) builder;
   final ScrollController scrollController;
+  
   final Function(int)? dropById;
   final Function? clearAll;
   // final Future futureData;
@@ -67,6 +68,7 @@ class EndlessListView<T extends History> extends StatefulWidget {
   @override
   State<EndlessListView> createState() => _EndlessListViewState<T>();
 }
+
 
 class _EndlessListViewState<T extends History> extends State<EndlessListView> {
   late EndlessListViewController controller;
@@ -223,7 +225,6 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
 
   List<T> _getAll() => [...datalist];
 }
-
 
 
 class EndlessEmptyWidget extends StatelessWidget {

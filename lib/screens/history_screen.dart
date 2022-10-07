@@ -20,6 +20,7 @@ class HistoryScreen extends StatefulWidget {
   State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
+
 class _HistoryScreenState extends State<HistoryScreen> {
   final ScrollController _scrollController = ScrollController();
   EndlessListViewController<History> controller = EndlessListViewController<History>(limit: 10);
@@ -55,36 +56,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if(controller.hasData)
-            Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black38,
-                    blurRadius: 5,
-                    offset: Offset(0, 2)
-                  )
-                ]
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Tap to copy'),
-                  TextButton.icon(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.red
-                    ),
-                    onPressed: () => controller.clearAll,
-                    icon: const Icon(Icons.delete_forever,
-                      color: Colors.red,
-                    ),
-                    label: const Text('Clear History')
-                  )
-                ]
-              ),
-            ),
+          // TopMessageWidget(controller.clearAll!),
 
           Expanded(
             child: EndlessListView<History>(
@@ -95,7 +67,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               // futureData: futureData,
               scrollController: _scrollController,
               builder: (_, History item) {
-                return HistoryTile(item.id!, item.solution, item.problem, controller.dropById!);
+                return HistoryTile(item.id, item.solution, item.problem, controller.dropById!);
               }
             ),
           ),
@@ -205,6 +177,65 @@ class HistoryTile extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+
+class TopMessageWidget extends StatefulWidget {
+  final Function clearAll;
+
+  const TopMessageWidget(this.clearAll, {Key? key}) : super(key: key);
+
+  @override
+  State<TopMessageWidget> createState() => _TopMessageWidgetState();
+}
+
+
+class _TopMessageWidgetState extends State<TopMessageWidget> {
+  late bool display;
+
+  @override
+  void initState() async {
+    super.initState();
+
+    var isar = Isar.getInstance()!;
+    var count = await isar.historys.count();
+    display = count > 0;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return display
+        ? Container(
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black38,
+                      blurRadius: 5,
+                      offset: Offset(0, 2)
+                  )
+                ]
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Tap to copy'),
+                  TextButton.icon(
+                      style: TextButton.styleFrom(
+                          foregroundColor: Colors.red
+                      ),
+                      onPressed: () {},
+                      icon: const Icon(Icons.delete_forever,
+                        color: Colors.red,
+                      ),
+                      label: const Text('Clear History')
+                  )
+                ]
+            ),
+          )
+        : SizedBox(height: 0);
   }
 }
 
