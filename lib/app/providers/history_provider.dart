@@ -25,21 +25,9 @@ class HistoryProvider with ChangeNotifier {
     });
   }
 
-  removeHistory(int id) async {
-    Isar isar = Isar.getInstance()!;
-    await isar.writeTxn(() async => await isar.historys.delete(id));
-  }
-
   Future<List<History>> fetchHistoryList() async {
     Isar isar = Isar.getInstance()!;
     return await isar.historys.where().sortByCreatedAtDesc().findAll();
-  }
-
-  clearHistory() async {
-    Isar isar = Isar.getInstance()!;
-    await isar.writeTxn(() async {
-      await isar.historys.where().idGreaterThan(0).deleteAll();
-    });
   }
 
 }

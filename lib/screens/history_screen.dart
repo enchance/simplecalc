@@ -7,6 +7,7 @@ import '../app/providers/calculator_provider.dart';
 import '../app/providers/history_provider.dart';
 import '../app/collections/history.dart';
 import '../app/styles.dart';
+import '../app/components/EndlessListView.dart';
 
 
 class HistoryScreen extends StatefulWidget {
@@ -20,31 +21,42 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   final ScrollController _scrollController = ScrollController();
-  late Future futureData;
-  var page = 1;
-  bool more = true;
-  bool isLoading = false;
-  List<History> data = [];
+  EndlessListViewController<History> controller = EndlessListViewController<History>(limit: 10);
+  // Future? futureData;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //
+  //   futureData = _fetchData();
+  //
+  //   _scrollController.addListener(() {
+  //     if(_scrollController.position.pixels >= _scrollController.position
+  //         .maxScrollExtent) {
+  //       _fetchData();
+  //     }
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
 
-    futureData = _fetchData();
+    // futureData = controller.fetchData!();
 
     _scrollController.addListener(() {
-      if(_scrollController.position.pixels >= _scrollController.position
-          .maxScrollExtent) {
-        _fetchData();
+      if(_scrollController.position.pixels >= _scrollController.position.maxScrollExtent) {
+        controller.fetchData!();
       }
     });
+
   }
 
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _scrollController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +67,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          if(data.isNotEmpty)
+          if(controller.hasData)
             Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -77,7 +88,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.red
                     ),
-                    onPressed: () => _clearHistory(context),
+                    onPressed: () => controller.clearAll,
                     icon: const Icon(Icons.delete_forever,
                       color: Colors.red,
                     ),
@@ -88,95 +99,77 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
 
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async => setState(() {
-                // Reset everything
-                more = true;
-                isLoading = false;
-                page = 1;
-                data.clear();
-                futureData = _fetchData();
-              }),
-              child: FutureBuilder(
-                  future: futureData,
-                  builder: (context, snapshot) {
-                    switch(snapshot.connectionState) {
-                      case ConnectionState.done:
-                        return data.isNotEmpty
-                          ? ListView.builder(
-                              controller: _scrollController,
-                              itemCount: data.length + 1,
-                              itemBuilder: (_, idx) {
-                                if(idx < data.length) {
-                                  History item = data[idx];
-                                  return HistoryTile(item.id!, item.solution, item.problem,
-                                      removeFromState);
-                                }
-                                else {
-                                  return more
-                                    ? const Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 10),
-                                        child: Center(
-                                          child: CircularProgressIndicator()
-                                        )
-                                      )
-                                    : const SizedBox(width: 0);
-                                }
-                              }
-                            )
-                          : const EmptyHistoryWidget();
-
-                      default:
-                        return const Center(
-                          child: CircularProgressIndicator()
-                        );
-                    }
-                  }
-              ),
-            )
+            child: EndlessListView<History>(
+              controller: controller,
+              fetchData: _fetchData,
+              dropById: _dropById,
+              clearAll: _clearHistory,
+              // futureData: futureData,
+              scrollController: _scrollController,
+              builder: (_, History item) {
+                return HistoryTile(item.id!, item.solution, item.problem, controller.dropById!);
+              }
+            ),
           ),
+
+          // Expanded(
+          //   child: RefreshIndicator(
+          //     onRefresh: () async => setState(() {
+          //
+          //     }),
+          //     child: FutureBuilder(
+          //         future: futureData,
+          //         builder: (context, snapshot) {
+          //           switch(snapshot.connectionState) {
+          //             case ConnectionState.done:
+          //               return data.isNotEmpty
+          //                 ?
+          //                 :
+          //
+          //             default:
+          //               return const Center(
+          //                 child: CircularProgressIndicator()
+          //               );
+          //           }
+          //         }
+          //     ),
+          //   )
+          // ),
         ],
       ),
     );
   }
 
-  Future _fetchData() async {
-    if(!more || isLoading) return;
-    isLoading = true;
-
+  Future<List<History>> _fetchData(int offset, int limit) async {
+    print('offset $offset');
     // Simulate delays
     await Future.delayed(const Duration(seconds: 1));
 
     Isar isar = Isar.getInstance()!;
     List<History> rows = await isar.historys.where().sortByCreatedAtDesc()
-      .offset((page - 1) * 10).limit(10 + 1).findAll();
+        .offset(offset).limit(limit).findAll();
+    return rows;
+  }
 
-    setState(() {
-      isLoading = false;
-      if(rows.length < 10 + 1) {
-        more = false;
-      }
-      else {
-        rows.removeLast();
-      }
-      data.addAll(rows);
-      page++;
+  _clearHistory() async {
+    Isar isar = Isar.getInstance()!;
+    await isar.writeTxn(() async {
+      await isar.historys.where().idGreaterThan(0).deleteAll();
     });
   }
 
-  _clearHistory(BuildContext context) async {
-    await Provider.of<HistoryProvider>(context, listen: false).clearHistory();
-    data = [];
-    setState(() {});
+  _dropById(int id) async {
+    Isar isar = Isar.getInstance()!;
+    await isar.writeTxn(() async => await isar.historys.delete(id));
   }
 
-  removeFromState(int id) {
-    List<History> filteredData = [...data];
-    filteredData.removeWhere((item) => item.id == id);
-    setState(() {
-      data = filteredData;
-    });
-  }
+  // removeFromState(int id) {
+  //   List<History> filteredData = [...data];
+  //   filteredData.removeWhere((item) => item.id == id);
+  //   setState(() {
+  //     data = filteredData;
+  //   });
+  // }
 }
 
 
@@ -184,10 +177,9 @@ class HistoryTile extends StatelessWidget {
   final int id;
   final String title;
   final String subtitle;
-  final Function removeFromState;
+  final Function(int) dropById;
 
-  const HistoryTile(this.id, this.title, this.subtitle, this.removeFromState,
-      {Key?key}) : super(key: key);
+  const HistoryTile(this.id, this.title, this.subtitle, this.dropById, {Key?key}) : super(key: key);
 
   Widget _buildAutoSizeText(String text, {int lines=3, TextStyle? style}) {
     return AutoSizeText(
@@ -199,8 +191,8 @@ class HistoryTile extends StatelessWidget {
   }
 
   void _handleDelete(BuildContext context, int id) async {
-    Provider.of<HistoryProvider>(context, listen: false).removeHistory(id);
-    removeFromState(id);
+    // Provider.of<HistoryProvider>(context, listen: false).removeHistory(id);
+    // dropById(id);
   }
 
   @override
@@ -239,28 +231,3 @@ class HistoryTile extends StatelessWidget {
 }
 
 
-class EmptyHistoryWidget extends StatelessWidget {
-  const EmptyHistoryWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.history_outlined,
-              size: 100,
-              color: tintColor(Colors.grey, 0.5),
-          ),
-          Text('Nothing to see here',
-            style: TextStyle(
-              color: tintColor(Colors.grey, 0.3),
-              fontSize: Theme.of(context).textTheme.headline1!.fontSize
-            )
-          )
-        ],
-      )
-    );
-  }
-}
