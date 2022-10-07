@@ -86,13 +86,6 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
     futureData = controller.fetchData!();
   }
 
-  // @override
-  // void dispose() {/**/
-  //   controller.dispose();
-  //   _scrollController.dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -136,14 +129,14 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
   }
 
   _fetchData() async {
+    if(controller.isLoading) return;
+    if(!controller.hasMore) return;
+
     int offset = (controller.currentPage - 1) * controller.limit;
     int limit = controller.limit + 1;
     List<T> rows = [];
-    print(offset);
-    print(limit);
-
-    if(controller.isLoading) return;
     controller.isLoading = true;
+    print('offset $offset');
 
     // Get data from db
     rows = await widget.fetchData(offset, limit);
@@ -164,6 +157,7 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
 
     controller.count = datalist.length;
     controller.isLoading = false;
+    print('count ${controller.count}');
   }
 
   _refresh() async {
@@ -201,7 +195,7 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
   }
 
   _clearAll() {
-
+    print('cleared');
     try {
       // DB
       if(widget.clearAll != null) widget.clearAll!();

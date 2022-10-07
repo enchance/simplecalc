@@ -141,7 +141,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Future<List<History>> _fetchData(int offset, int limit) async {
-    print('offset $offset');
     // Simulate delays
     await Future.delayed(const Duration(seconds: 1));
 
@@ -163,13 +162,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
     await isar.writeTxn(() async => await isar.historys.delete(id));
   }
 
-  // removeFromState(int id) {
-  //   List<History> filteredData = [...data];
-  //   filteredData.removeWhere((item) => item.id == id);
-  //   setState(() {
-  //     data = filteredData;
-  //   });
-  // }
 }
 
 
