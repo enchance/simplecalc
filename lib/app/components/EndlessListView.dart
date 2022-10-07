@@ -25,11 +25,11 @@ class EndlessListViewController<T> {
   EndlessListViewController({required this.limit});
 
   void dispose() {
-    currentPage = 0;
+    currentPage = 1;
     limit = 0;
     count = 0;
 
-    hasMore = false;
+    hasMore = true;
     isLoading = false;
     hasData = false;
 
@@ -83,7 +83,7 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
     controller.getAll = _getAll;
     controller.fetchData = _fetchData;
 
-    futureData = controller.fetchData!();
+    futureData = _fetchData();
   }
 
   @override
@@ -153,6 +153,7 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
         datalist.addAll(rows);
       });
       controller.hasData = true;
+      print('has data: ${controller.hasData}');
     }
 
     controller.count = datalist.length;
@@ -163,13 +164,13 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
   _refresh() async {
     try {
       controller.currentPage = 1;
-      controller.hasData = false;
       controller.hasMore = true;
       controller.isLoading = false;
+      controller.hasData = false;
 
       setState(() {
-        _clearAll();
-        if(controller.count == 0) futureData = controller.fetchData!();
+        // _clearAll();
+        futureData = _fetchData();
       });
     }
     catch(e) {
@@ -194,22 +195,25 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
     }
   }
 
+  _resetState() {
+    setState(() {
+      datalist.clear();
+    });
+
+    controller.currentPage = 1;
+    controller.hasData = false;
+
+    controller.hasMore = true;
+    controller.isLoading = false;
+    controller.count = 0;
+  }
+
   _clearAll() {
     print('cleared');
     try {
       // DB
       if(widget.clearAll != null) widget.clearAll!();
-
-      setState(() {
-        datalist.clear();
-      });
-
-      controller.currentPage = 1;
-      controller.hasData = false;
-
-      controller.hasMore = true;
-      controller.isLoading = false;
-      controller.count = 0;
+      _resetState();
     }
     catch(e) {
       // TODO: Missing catch

@@ -1,3 +1,4 @@
+import 'package:SimpleCalc/app/collections/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
@@ -18,16 +19,29 @@ class HistoryProvider with ChangeNotifier {
   // TODO: Read from the list
 
   addHistory(History history) async {
-    // Save to db
-    Isar isar = Isar.getInstance()!;
-    await isar.writeTxn(() async {
-      await isar.historys.put(history);
-    });
+    try {
+      Isar isar = Isar.getInstance()!;
+
+      final settings = await isar.settings.where().nameEqualTo('hasHistoryData').findAll();
+      print(settings);
+      // final settings =
+      //   Settings()
+      //     ..name='hasHistoryData'..valueBool=true;
+          // ..valueInt=null..valueStr=null;
+
+      await isar.writeTxn(() async {
+        await isar.historys.put(history);
+        // await isar.settings.put(settings);
+      });
+    }
+    catch(e) {
+      print(e);
+    }
   }
 
-  Future<List<History>> fetchHistoryList() async {
-    Isar isar = Isar.getInstance()!;
-    return await isar.historys.where().sortByCreatedAtDesc().findAll();
-  }
+  // Future<List<History>> fetchHistoryList() async {
+  //   Isar isar = Isar.getInstance()!;
+  //   return await isar.historys.where().sortByCreatedAtDesc().findAll();
+  // }
 
 }

@@ -55,7 +55,6 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   Future<String> compute() async {
-    final Isar isar = Isar.getInstance()!;
     final history = History()
       ..problem=_equation..createdAt=DateTime.now();
 

@@ -5,7 +5,7 @@ part 'history.g.dart';
 
 @collection
 class History {
-  Id? id;
+  Id id = Isar.autoIncrement;
   late String problem;
   late String solution;
   @Index(unique: true)

@@ -1,3 +1,4 @@
+import 'package:SimpleCalc/app/collections/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
@@ -24,20 +25,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   EndlessListViewController<History> controller = EndlessListViewController<History>(limit: 10);
   // Future? futureData;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //
-  //   futureData = _fetchData();
-  //
-  //   _scrollController.addListener(() {
-  //     if(_scrollController.position.pixels >= _scrollController.position
-  //         .maxScrollExtent) {
-  //       _fetchData();
-  //     }
-  //   });
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -52,11 +39,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   }
 
-  // @override
-  // void dispose() {
-  //   _scrollController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -151,9 +139,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   _clearHistory() async {
+    Settings settings = Settings()..name='hasHistoryData'..valueBool=false;
+
     Isar isar = Isar.getInstance()!;
     await isar.writeTxn(() async {
       await isar.historys.where().idGreaterThan(0).deleteAll();
+      await isar.settings.put(settings);
     });
   }
 
@@ -182,11 +173,6 @@ class HistoryTile extends StatelessWidget {
     );
   }
 
-  void _handleDelete(BuildContext context, int id) async {
-    // Provider.of<HistoryProvider>(context, listen: false).removeHistory(id);
-    // dropById(id);
-  }
-
   @override
   Widget build(BuildContext context) {
     var calc = Provider.of<CalculatorProvider>(context, listen: false);
@@ -194,7 +180,7 @@ class HistoryTile extends StatelessWidget {
     return Dismissible(
       key: ValueKey(id),
       direction: DismissDirection.endToStart,
-      onDismissed: (dir) => _handleDelete(context, id),
+      onDismissed: (dir) => dropById(id),
       background: Container(
         alignment: Alignment.centerRight,
         color: Colors.red,
