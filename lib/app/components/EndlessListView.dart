@@ -49,9 +49,9 @@ class EndlessListView<T extends History> extends StatefulWidget {
   final Function(int, int) fetchData;
   final Function(BuildContext, T) builder;
   final ScrollController scrollController;
-  
+
+  late Function? clearAll;
   final Function(int)? dropById;
-  final Function? clearAll;
   // final Future futureData;
 
   EndlessListView({
@@ -59,16 +59,15 @@ class EndlessListView<T extends History> extends StatefulWidget {
     required this.fetchData,
     required this.builder,
     required this.scrollController,
+    this.clearAll,
     // required this.futureData,
     this.dropById,
-    this.clearAll,
     Key? key
   }) : super(key: key);
 
   @override
   State<EndlessListView> createState() => _EndlessListViewState<T>();
 }
-
 
 class _EndlessListViewState<T extends History> extends State<EndlessListView> {
   late EndlessListViewController controller;
@@ -155,7 +154,6 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
         datalist.addAll(rows);
       });
       controller.hasData = true;
-      print('has data: ${controller.hasData}');
     }
 
     controller.count = datalist.length;
@@ -165,13 +163,8 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
 
   _refresh() async {
     try {
-      controller.currentPage = 1;
-      controller.hasMore = true;
-      controller.isLoading = false;
-      controller.hasData = false;
-
+      _resetState();
       setState(() {
-        // _clearAll();
         futureData = _fetchData();
       });
     }
@@ -210,11 +203,11 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
     controller.count = 0;
   }
 
-  _clearAll() {
+  _clearAll() async {
     print('cleared');
     try {
-      // DB
-      if(widget.clearAll != null) widget.clearAll!();
+      if(widget.clearAll == null) return;
+      await widget.clearAll!();   // Clear db
       _resetState();
     }
     catch(e) {

@@ -21,17 +21,8 @@ class HistoryProvider with ChangeNotifier {
   addHistory(History history) async {
     try {
       Isar isar = Isar.getInstance()!;
-
-      final settings = await isar.settings.where().nameEqualTo('hasHistoryData').findAll();
-      print(settings);
-      // final settings =
-      //   Settings()
-      //     ..name='hasHistoryData'..valueBool=true;
-          // ..valueInt=null..valueStr=null;
-
       await isar.writeTxn(() async {
         await isar.historys.put(history);
-        // await isar.settings.put(settings);
       });
     }
     catch(e) {

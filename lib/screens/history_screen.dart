@@ -20,7 +20,6 @@ class HistoryScreen extends StatefulWidget {
   State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
-
 class _HistoryScreenState extends State<HistoryScreen> {
   final ScrollController _scrollController = ScrollController();
   EndlessListViewController<History> controller = EndlessListViewController<History>(limit: 10);
@@ -56,7 +55,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // TopMessageWidget(controller.clearAll!),
+          TopMessageWidget(clearAll: () => controller.clearAll!()),
 
           Expanded(
             child: EndlessListView<History>(
@@ -72,29 +71,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
           ),
 
-          // Expanded(
-          //   child: RefreshIndicator(
-          //     onRefresh: () async => setState(() {
-          //
-          //     }),
-          //     child: FutureBuilder(
-          //         future: futureData,
-          //         builder: (context, snapshot) {
-          //           switch(snapshot.connectionState) {
-          //             case ConnectionState.done:
-          //               return data.isNotEmpty
-          //                 ?
-          //                 :
-          //
-          //             default:
-          //               return const Center(
-          //                 child: CircularProgressIndicator()
-          //               );
-          //           }
-          //         }
-          //     ),
-          //   )
-          // ),
         ],
       ),
     );
@@ -111,12 +87,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   _clearHistory() async {
-    Settings settings = Settings()..name='hasHistoryData'..valueBool=false;
-
     Isar isar = Isar.getInstance()!;
     await isar.writeTxn(() async {
       await isar.historys.where().idGreaterThan(0).deleteAll();
-      await isar.settings.put(settings);
     });
   }
 
@@ -182,25 +155,29 @@ class HistoryTile extends StatelessWidget {
 
 
 class TopMessageWidget extends StatefulWidget {
-  final Function clearAll;
+  final VoidCallback? clearAll;
 
-  const TopMessageWidget(this.clearAll, {Key? key}) : super(key: key);
+  const TopMessageWidget({this.clearAll, Key? key}) : super(key: key);
 
   @override
   State<TopMessageWidget> createState() => _TopMessageWidgetState();
 }
 
-
 class _TopMessageWidgetState extends State<TopMessageWidget> {
-  late bool display;
+  bool display = false;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
 
+    _getHistoryCount().then((count) {
+      setState(() => display = count > 0);
+    });
+  }
+
+  Future<int> _getHistoryCount() async {
     var isar = Isar.getInstance()!;
-    var count = await isar.historys.count();
-    display = count > 0;
+    return await isar.historys.count();
   }
 
   @override
@@ -218,24 +195,29 @@ class _TopMessageWidgetState extends State<TopMessageWidget> {
                 ]
             ),
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Tap to copy'),
-                  TextButton.icon(
-                      style: TextButton.styleFrom(
-                          foregroundColor: Colors.red
-                      ),
-                      onPressed: () {},
-                      icon: const Icon(Icons.delete_forever,
-                        color: Colors.red,
-                      ),
-                      label: const Text('Clear History')
-                  )
-                ]
+            child: SizedBox(
+              height: 50,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Tap number to copy'),
+
+                    // if(widget.clearAll != null)
+                    TextButton.icon(
+                        style: TextButton.styleFrom(
+                            foregroundColor: Colors.red
+                        ),
+                        onPressed: widget.clearAll,
+                        icon: const Icon(Icons.delete_forever,
+                          color: Colors.red,
+                        ),
+                        label: const Text('Clear History')
+                    )
+                  ]
+              ),
             ),
           )
-        : SizedBox(height: 0);
+        : const SizedBox(height: 0);
   }
 }
 
