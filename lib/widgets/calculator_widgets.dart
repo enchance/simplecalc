@@ -25,7 +25,7 @@ class Display extends StatelessWidget {
         // maxHeight: 120,
       ),
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 7),
       decoration: BoxDecoration(
         color: NordTheme.snow1,
         borderRadius: BorderRadius.circular(5),
@@ -35,11 +35,12 @@ class Display extends StatelessWidget {
         maxLines: 3,
         style: TextStyle(
           fontSize: size,
-          fontFamily: 'Nineteen97',
-          color: Colors.blueGrey,
+          fontFamily: 'Displayfont',
+          fontWeight: FontWeight.bold,
+          color: Colors.grey.shade600,
         ),
         textAlign: TextAlign.right,
-        minFontSize: 16,
+        minFontSize: 22,
         overflow: TextOverflow.ellipsis,
       ),
     );

@@ -17,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.2.0
+version: 1.2.0+2
 
 environment:
   sdk: '>=2.18.1 <3.0.0'
@@ -73,7 +73,7 @@ flutter_icons:
   android: true
   image_path_ios: "assets/dev/icon.png"
   image_path_android: "assets/dev/icon.png"
-  adaptive_icon_background: "#81baca"
+  adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: "assets/dev/adaptive.png"
   remove_alpha_ios: true
 
@@ -103,9 +103,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Nineteen97
+    - family: Displayfont
       fonts:
-        - asset: assets/fonts/NineteenNinetySeven-11XB.ttf
+        - asset: assets/fonts/lucida-grande-bold.ttf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -49,11 +49,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   const SizedBox(height: 20),
                   Stack(
                     children: [
-                      Display(calc.equation, 22),
+                      Display(calc.equation, 34),
                       Positioned(
                         top: -10, left: -10,
                         child: IconButton(
-                          iconSize: 16,
+                          iconSize: 18,
                             onPressed: () => _copy(context, calc.equation),
                             icon: Icon(Icons.copy, color: Colors.grey.withOpacity(1),),
                         ),
