@@ -121,7 +121,7 @@ class _CalcButtonState extends State<CalcButton> {
 
       case 'MR':
         return GestureDetector(
-            onTap: () => _paste(calc),
+            onTap: () => Provider.of<CalculatorProvider>(context, listen: false).paste(),
             child: CalcContent(
               color: tintColor(Colors.grey, 0.3),
               value: 'MR',
@@ -164,7 +164,7 @@ class _CalcButtonState extends State<CalcButton> {
 
       case 'paste':
         return GestureDetector(
-            onTap: () => _paste(calc),
+            onTap: () => Provider.of<CalculatorProvider>(context, listen: false).paste(),
             child: CalcContent(
                 color: tintColor(Colors.grey, 0.3),
                 value: const Icon(Icons.paste, color: Colors.white,)
@@ -189,28 +189,6 @@ class _CalcButtonState extends State<CalcButton> {
 
     calc.append('x-1');
     calc.compute();
-  }
-
-  void _paste(CalculatorProvider calc) async {
-    ClipboardData? cbdata = await Clipboard.getData('text/plain');
-    if(cbdata != null) {
-      String chars = cbdata.text as String;
-
-      var finalStr = '';
-      for(int i = 0; i < chars.length; i++) {
-        if([
-          '/', '(', ')',
-          '7', '8', '9', 'x',
-          '4', '5', '6', '-',
-          '1', '2', '3', '+',
-          '0', '.'
-        ].contains(chars[i])) {
-          finalStr += chars[i];
-        }
-      }
-      calc.append(finalStr);
-
-    }
   }
 
   // void _clearClipboard(BuildContext context) {

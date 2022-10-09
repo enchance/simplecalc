@@ -47,18 +47,20 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-                  Stack(
-                    children: [
-                      Display(calc.equation, 34),
-                      Positioned(
-                        top: -10, left: -10,
-                        child: IconButton(
-                          iconSize: 18,
-                            onPressed: () => _copy(context, calc.equation),
-                            icon: Icon(Icons.copy, color: Colors.grey.withOpacity(1),),
-                        ),
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      _copy(context, calc.equation);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: const Text('Copied'))
+                      );
+                    },
+                      onLongPress: () {
+                        Provider.of<CalculatorProvider>(context, listen: false).paste();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: const Text('Display pasted'))
+                        );
+                      },
+                    child: Display(calc.equation, 34)
                   ),
                   const SizedBox(height: 20),
                   const SizedBox(height: 5),

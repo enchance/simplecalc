@@ -1,3 +1,4 @@
+import 'package:SimpleCalc/screens/info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class _IndexScreenState extends State<IndexScreen> with SingleTickerProviderStat
   final List<Widget> _pages = const [
     CalculatorScreen(),
     CryptoScreen(),
+    InfoScreen(),
   ];
 
   @override
@@ -47,7 +49,7 @@ class _IndexScreenState extends State<IndexScreen> with SingleTickerProviderStat
     return KeyboardDismisser(
       child: Scaffold(
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight),
+            preferredSize: const Size.fromHeight(kToolbarHeight),
             child: AppBar(
               backgroundColor: NordTheme.primary,
               bottom: TabBar(
@@ -58,7 +60,7 @@ class _IndexScreenState extends State<IndexScreen> with SingleTickerProviderStat
                   tabs: const [
                     Tab(icon: Icon(Icons.calculate, size: 30,)),
                     Tab(icon: Icon(Icons.area_chart, size: 30,)),
-                    // Tab(icon: Icon(Icons.settings, size: 30,)),
+                    Tab(icon: Icon(Icons.info, size: 30,)),
                   ]
               ),
             ),

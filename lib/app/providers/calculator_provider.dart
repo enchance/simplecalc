@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:flutter/services.dart';
 
 import 'settings_provider.dart';
 import '../collections/history.dart';
@@ -21,7 +22,7 @@ class CalculatorProvider with ChangeNotifier {
 
   setStartAgain(bool val) => startAgain = val;
 
-  void append(String char) {
+  append(String char) {
     List<String> operators = ['+', '-', 'x', '÷'];
     List<String> numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.`'];
 
@@ -75,5 +76,26 @@ class CalculatorProvider with ChangeNotifier {
     notifyListeners();
     setStartAgain(true);
     return _equation;
+  }
+
+  paste() async {
+    ClipboardData? cbdata = await Clipboard.getData('text/plain');
+    if(cbdata != null) {
+      String chars = cbdata.text as String;
+
+      var finalStr = '';
+      for(int i = 0; i < chars.length; i++) {
+        if([
+          '/', '(', ')',
+          '7', '8', '9', 'x',
+          '4', '5', '6', '-',
+          '1', '2', '3', '+',
+          '0', '.'
+        ].contains(chars[i])) {
+          finalStr += chars[i];
+        }
+      }
+      append(finalStr);
+    }
   }
 }
