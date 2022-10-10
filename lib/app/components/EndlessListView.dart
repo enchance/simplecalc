@@ -3,7 +3,7 @@ import 'package:isar/isar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../styles.dart';
-import '../collections/history.dart';
+// import '../collections/history.dart';
 
 
 
@@ -44,7 +44,7 @@ class EndlessListViewController<T> {
 }
 
 
-class EndlessListView<T extends History> extends StatefulWidget {
+class EndlessListView<T> extends StatefulWidget {
   final EndlessListViewController controller;
   final Function(int, int) fetchData;
   final Function(BuildContext, T) builder;
@@ -69,7 +69,7 @@ class EndlessListView<T extends History> extends StatefulWidget {
   State<EndlessListView> createState() => _EndlessListViewState<T>();
 }
 
-class _EndlessListViewState<T extends History> extends State<EndlessListView> {
+class _EndlessListViewState<T> extends State<EndlessListView> {
   late EndlessListViewController controller;
   late Future futureData;
   List<T> datalist = [];
@@ -179,7 +179,7 @@ class _EndlessListViewState<T extends History> extends State<EndlessListView> {
       if(widget.dropById != null) widget.dropById!(id);
 
       setState(() {
-        datalist.removeWhere((T element) => element.id == id);
+        datalist.removeWhere((T element) => (element as dynamic).id == id);
       });
 
       if(datalist.isEmpty) controller.hasData = false;

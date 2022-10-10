@@ -7,24 +7,24 @@ class InfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Information')
-      ),
       body: Container(
         padding: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Calculator Actions', style: Theme.of(context).textTheme.headline1),
+            const SizedBox(height: 20),
+            Text('Information', style: Theme.of(context).textTheme.headline1),
+            const SizedBox(height: 20),
+            Text('Calculator', style: Theme.of(context).textTheme.headline5),
             const ListTile(
               leading: Icon(Icons.copy),
-              title: Text('Copying calculator solution'),
-              subtitle: Text('Tap the screen to copy'),
+              title: Text('Copy calculator solution'),
+              subtitle: Text('Tap solution to copy'),
             ),
             const ListTile(
               leading: Icon(Icons.paste),
-              title: Text('Pasting clipboard to calculator'),
-              subtitle: Text('Long press the calculator screen to paste'),
+              title: Text('Paste clipboard to calculator'),
+              subtitle: Text('Long press the number screen to paste'),
             )
           ]
         )

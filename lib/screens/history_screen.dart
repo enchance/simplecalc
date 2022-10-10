@@ -9,6 +9,7 @@ import '../app/providers/history_provider.dart';
 import '../app/collections/history.dart';
 import '../app/styles.dart';
 import '../app/components/EndlessListView.dart';
+import '../app/styles.dart';
 
 
 class HistoryScreen extends StatefulWidget {
@@ -65,7 +66,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               clearAll: _clearHistory,
               // futureData: futureData,
               scrollController: _scrollController,
-              builder: (_, History item) {
+              builder: (_, dynamic item) {
                 return HistoryTile(item.id, item.solution, item.problem, controller.dropById!);
               }
             ),
@@ -205,11 +206,11 @@ class _TopMessageWidgetState extends State<TopMessageWidget> {
                     // if(widget.clearAll != null)
                     TextButton.icon(
                         style: TextButton.styleFrom(
-                            foregroundColor: Colors.red
+                            foregroundColor: Colors.pink.withOpacity(0.6)
                         ),
                         onPressed: widget.clearAll,
-                        icon: const Icon(Icons.delete_forever,
-                          color: Colors.red,
+                        icon: Icon(Icons.delete_forever,
+                          color: Colors.pink.withOpacity(0.6),
                         ),
                         label: const Text('Clear History')
                     )
