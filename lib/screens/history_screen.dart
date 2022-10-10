@@ -173,6 +173,8 @@ class _TopMessageWidgetState extends State<TopMessageWidget> {
 
     _getHistoryCount().then((count) {
       setState(() => display = count > 0);
+    }).catchError((e) {
+      print(e);
     });
   }
 
