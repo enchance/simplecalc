@@ -62,6 +62,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       },
                     child: Display(calc.equation, 34)
                   ),
+                  const SizedBox(height: 10),
+                  const Text('Tap answer to copy', style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   const SizedBox(height: 5),
                   GridView(

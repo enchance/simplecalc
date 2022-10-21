@@ -18,12 +18,12 @@ class InfoScreen extends StatelessWidget {
             Text('Calculator', style: Theme.of(context).textTheme.headline5),
             const ListTile(
               leading: Icon(Icons.copy),
-              title: Text('Copy calculator solution'),
+              title: Text('Copy solution'),
               subtitle: Text('Tap solution to copy'),
             ),
             const ListTile(
               leading: Icon(Icons.paste),
-              title: Text('Paste clipboard to calculator'),
+              title: Text('Paste from clipboard'),
               subtitle: Text('Long press the number screen to paste'),
             )
           ]
