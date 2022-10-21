@@ -188,7 +188,7 @@ class _CalcButtonState extends State<CalcButton> {
     }
 
     calc.append('x-1');
-    calc.compute();
+    calc.compute(true);
   }
 
   // void _clearClipboard(BuildContext context) {

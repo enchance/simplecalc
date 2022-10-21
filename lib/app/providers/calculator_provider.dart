@@ -55,7 +55,7 @@ class CalculatorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> compute() async {
+  Future<String> compute([bool skipHistory=false]) async {
     final history = History()
       ..problem=_equation..createdAt=DateTime.now();
 
@@ -71,7 +71,7 @@ class CalculatorProvider with ChangeNotifier {
 
     // Save to db
     history.solution = _equation;
-    _history!.addHistory(history);
+    if(!skipHistory) _history!.addHistory(history);
 
     notifyListeners();
     setStartAgain(true);
