@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/calculator_screen.dart';
 import '../screens/trading_screen.dart';
 import '../screens/settings_screen.dart';
-import '../core/styles.dart';
+import '../app/styles.dart';
 
 
 class MenuWidget extends StatelessWidget {

@@ -1,9 +1,12 @@
+import 'package:SimpleCalc/app/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
-import '../providers/calculator_provider.dart';
+import '../app/providers/calculator_provider.dart';
 import '../widgets/calculator_widgets.dart';
-import '../core/styles.dart';
+import './history_screen.dart';
+
 
 
 class CalculatorScreen extends StatefulWidget {
@@ -20,20 +23,18 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   final List<String> _buttons = [
     // 'C', 'MR', 'M+', 'del',
     // '(', ')', 'M-', '÷',
-    'C', 'M', 'del', '÷',
+    'C', '+/-', 'del', '÷',
     '7', '8', '9', 'x',
     '4', '5', '6', '-',
     '1', '2', '3', '+',
-    '()', '0', '.', '=',
+    '00', '0', '.', '=',
   ];
 
   @override
   Widget build(BuildContext context) {
     final calc = Provider.of<CalculatorProvider>(context);
 
-    return Scaffold(
-      backgroundColor: NordTheme.snow3,
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         child: Center(
           child: Container(
             // width: maxWidth > 500 ? 500 : double.infinity,
@@ -46,7 +47,27 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-                  Display(calc.equation, 22),
+                  GestureDetector(
+                    onTap: () {
+                      _copy(context, calc.equation);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: const Text('Copied'))
+                      );
+                    },
+                      onLongPress: () {
+                        Provider.of<CalculatorProvider>(context, listen: false).paste();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: const Text('Display pasted'))
+                        );
+                      },
+                    child: Display(calc.equation, 34)
+                  ),
+                  const SizedBox(height: 10),
+                  const Text('Tap answer to copy', style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   const SizedBox(height: 5),
                   GridView(
@@ -62,13 +83,33 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   ),
                   // const SizedBox(height: 10),
                   // const CalcButton('='),
-                  // const SizedBox(height: 15),
+                  const SizedBox(height: 15),
+                  TextButton.icon(
+                      onPressed: () => Navigator.of(context).pushNamed(HistoryScreen.route),
+                      icon: const Icon(Icons.history_outlined,
+                        color: Colors.grey,
+                      ),
+                      label: const Text('View History',
+                        style: TextStyle(
+                            color: Colors.grey
+                        )
+                      ),
+                  )
                 ],
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
+  }
+
+  void _copy(BuildContext context, String data, [bool inform=true]) async {
+    data = data.replaceAll(',', '');
+    await Clipboard.setData(ClipboardData(text: data));
+    if(inform) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Copied'))
+      );
+    }
   }
 }

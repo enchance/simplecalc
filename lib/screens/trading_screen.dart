@@ -77,7 +77,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
       controller: _buycont,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.currency_bitcoin),
+        prefixIcon: const Icon(Icons.arrow_forward),
         suffixIcon: _buycont.text.isEmpty
             ? Container(width: 0)
             : IconButton(
@@ -103,7 +103,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
       controller: _sellcont,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.currency_bitcoin),
+        prefixIcon: const Icon(Icons.arrow_back),
         suffixIcon: _sellcont.text.isEmpty
             ? Container(width: 0)
             : IconButton(

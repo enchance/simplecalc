@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
 
-import '../providers/calculator_provider.dart';
-import '../core/styles.dart';
+import '../app/providers/calculator_provider.dart';
+import '../app/styles.dart';
 
 
 
@@ -24,7 +25,7 @@ class Display extends StatelessWidget {
         // maxHeight: 120,
       ),
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 7),
       decoration: BoxDecoration(
         color: NordTheme.snow1,
         borderRadius: BorderRadius.circular(5),
@@ -34,11 +35,12 @@ class Display extends StatelessWidget {
         maxLines: 3,
         style: TextStyle(
           fontSize: size,
-          fontFamily: 'Nineteen97',
-          color: Colors.blueGrey,
+          fontFamily: 'Displayfont',
+          fontWeight: FontWeight.bold,
+          color: Colors.grey.shade600,
         ),
         textAlign: TextAlign.right,
-        minFontSize: 16,
+        minFontSize: 22,
         overflow: TextOverflow.ellipsis,
       ),
     );
@@ -57,57 +59,6 @@ class CalcButton extends StatefulWidget {
 
 class _CalcButtonState extends State<CalcButton> {
   var dot = true;
-
-  void _copy(BuildContext context, String data, [bool inform=true]) async {
-    data = data.replaceAll(',', '');
-    await Clipboard.setData(ClipboardData(text: data));
-    if(inform) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Saved'))
-      );
-    }
-  }
-
-  void _paste(CalculatorProvider calc) async {
-    ClipboardData? cbdata = await Clipboard.getData('text/plain');
-    if(cbdata != null) {
-      String chars = cbdata.text as String;
-
-      var finalStr = '';
-      for(int i = 0; i < chars.length; i++) {
-        if([
-          '/', '(', ')',
-          '7', '8', '9', 'x',
-          '4', '5', '6', '-',
-          '1', '2', '3', '+',
-          '0', '.'
-        ].contains(chars[i])) {
-          finalStr += chars[i];
-        }
-      }
-      calc.append(finalStr);
-    }
-  }
-
-  void _clearClipboard(BuildContext context) {
-    _copy(context, '', false);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Memory cleared'))
-    );
-  }
-
-  void _negpos(CalculatorProvider calc) {
-    var chars = calc.equation.characters;
-    List<String> valid = ['1', '2', '3', '4', '5', '6', '7', '8', '9',
-                          '0', '.', ','];
-    for(var i = 0; i < chars.length; i++) {
-      if(i == 0 && calc.equation[i] == '-') continue;
-      // if(calc.equation[i] == ',') continue;
-      if(!valid.contains(calc.equation[i])) return;
-    }
-    calc.append('x-1');
-    calc.compute();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,62 +97,36 @@ class _CalcButtonState extends State<CalcButton> {
             )
         );
 
-      case '()':
-        return Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                    onTap: () => calc.append('('),
-                    child: CalcContent(
-                      color: tintColor(Colors.grey, 0.3),
-                      value: '(',
-                      fontSize: 20,
-                      radius: 'left',
-                    )
-                ),
-              ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: GestureDetector(
-                    onTap: () => calc.append(')'),
-                    child: CalcContent(
-                      color: tintColor(Colors.grey, 0.3),
-                      value: ')',
-                      fontSize: 20,
-                      radius: 'right',
-                    )
-                ),
-              ),
-            ]
+      case '(':
+      case ')':
+        return GestureDetector(
+            onTap: () => calc.append(widget.value),
+            child: CalcContent(
+              color: tintColor(Colors.grey, 0.3),
+              value: '(',
+              fontSize: 20,
+              radius: 'left',
+            )
         );
 
-      case 'M':
-        return Column(
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () => _copy(context, calc.equation),
-                child: CalcContent(
-                  color: tintColor(Colors.grey, 0.3),
-                  value: 'M+',
-                  fontSize: 20,
-                  radius: 'top',
-                )
-              ),
-            ),
-            const SizedBox(height: 6),
-            Expanded(
-              child: GestureDetector(
-                onTap: () => _paste(calc),
-                child: CalcContent(
-                  color: tintColor(Colors.grey, 0.3),
-                  value: 'MR',
-                  fontSize: 20,
-                  radius: 'bottom',
-                )
-              ),
-            ),
-          ],
+      // case 'M+':
+      //   return GestureDetector(
+      //       onTap: () => _copy(context, calc.equation),
+      //       child: CalcContent(
+      //         color: tintColor(Colors.grey, 0.3),
+      //         value: 'M+',
+      //         fontSize: 20,
+      //       )
+      //   );
+
+      case 'MR':
+        return GestureDetector(
+            onTap: () => Provider.of<CalculatorProvider>(context, listen: false).paste(),
+            child: CalcContent(
+              color: tintColor(Colors.grey, 0.3),
+              value: 'MR',
+              fontSize: 20,
+            )
         );
 
       case '+/-':
@@ -216,7 +141,7 @@ class _CalcButtonState extends State<CalcButton> {
         return GestureDetector(
           onTap: () => calc.clear(),
           child: CalcContent(
-            color: tintColor(Colors.grey, 0.3),
+            color: shadeColor(Colors.grey, 0.2),
             value: widget.value
           )
         );
@@ -233,7 +158,16 @@ class _CalcButtonState extends State<CalcButton> {
             onTap: () => calc.pop(),
             child: CalcContent(
                 color: tintColor(Colors.grey, 0.3),
-                value: Icon(Icons.backspace, color: Colors.white,)
+                value: const Icon(Icons.backspace, color: Colors.white,)
+            )
+        );
+
+      case 'paste':
+        return GestureDetector(
+            onTap: () => Provider.of<CalculatorProvider>(context, listen: false).paste(),
+            child: CalcContent(
+                color: tintColor(Colors.grey, 0.3),
+                value: const Icon(Icons.paste, color: Colors.white,)
             )
         );
 
@@ -242,6 +176,27 @@ class _CalcButtonState extends State<CalcButton> {
     }
     // return CalcContent(color: Colors.grey, value: widget.value);
   }
+
+  void _negpos(CalculatorProvider calc) {
+    var chars = calc.equation.characters;
+    List<String> valid = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', ','];
+
+    for(var i = 0; i < chars.length; i++) {
+      if(i == 0 && calc.equation[i] == '-') continue;
+      // if(calc.equation[i] == ',') continue;
+      if(!valid.contains(calc.equation[i])) return;
+    }
+
+    calc.append('x-1');
+    calc.compute(true);
+  }
+
+  // void _clearClipboard(BuildContext context) {
+  //   _copy(context, '', false);
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Memory cleared'))
+  //   );
+  // }
 }
 
 class CalcContent extends StatelessWidget {
@@ -251,6 +206,7 @@ class CalcContent extends StatelessWidget {
   final bool useGradient;
   final double fontSize;
   final String radius;
+  // final double padding;
 
   const CalcContent({
     required this.color,
