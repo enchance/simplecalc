@@ -231,6 +231,7 @@ class EndlessEmptyWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FaIcon(FontAwesomeIcons.faceLaughSquint, size: 100, color: Colors.grey[300]),
+            const SizedBox(height: 20),
             Text('Nothing to see here',
                 style: TextStyle(
                     color: Colors.grey[300],
