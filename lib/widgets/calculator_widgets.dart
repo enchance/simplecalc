@@ -64,7 +64,7 @@ class _CalcButtonState extends State<CalcButton> {
   Widget build(BuildContext context) {
     final calc = Provider.of<CalculatorProvider>(context, listen: false);
 
-    if (['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].contains(widget
+    if (['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '^'].contains(widget
         .value)) {
       return GestureDetector(
           onTap: () => calc.append(widget.value),

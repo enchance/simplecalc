@@ -23,11 +23,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   final List<String> _buttons = [
     // 'C', 'MR', 'M+', 'del',
     // '(', ')', 'M-', '÷',
-    'C', '+/-', 'del', '÷',
+    'C', '^', 'del', '÷',
     '7', '8', '9', 'x',
     '4', '5', '6', '-',
     '1', '2', '3', '+',
-    '00', '0', '.', '=',
+    '+/-', '0', '.', '=',
   ];
 
   @override
