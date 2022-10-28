@@ -63,19 +63,24 @@ class CalculatorProvider with ChangeNotifier {
     cleanStr = cleanStr.replaceAll('x', '*').replaceAll(',', '');
     cleanStr = cleanStr.replaceAll('÷', '/').replaceAll(',', '');
 
-    // Solve
-    Parser p = Parser();
-    Expression exp = p.parse(cleanStr);
-    double eval = exp.evaluate(EvaluationType.REAL, ContextModel());
-    _equation = humanize(eval);
+    try {
+      // Solve
+      Parser p = Parser();
+      Expression exp = p.parse(cleanStr);
+      double eval = exp.evaluate(EvaluationType.REAL, ContextModel());
+      _equation = humanize(eval);
 
-    // Save to db
-    history.solution = _equation;
-    if(!skipHistory) _history!.addHistory(history);
+      // Save to db
+      history.solution = _equation;
+      if(!skipHistory) _history!.addHistory(history);
 
-    notifyListeners();
-    setStartAgain(true);
-    return _equation;
+      notifyListeners();
+      setStartAgain(true);
+      return _equation;
+    }
+    catch(e) {
+      return '';
+    }
   }
 
   paste() async {

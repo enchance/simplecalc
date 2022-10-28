@@ -74,8 +74,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     padding: const EdgeInsets.all(0),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 6,
+                      crossAxisSpacing: 6,
                     ),
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
