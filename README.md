@@ -23,5 +23,5 @@ flutter pub global run rename --appname "BigButton Calculator"
 flutter pub run flutter_native_splash:create
 
 # Compile
-flutter clean && flutter build appbundle
+flutter clean && flutter build appbundle --obfuscate --split-debug-info=./symbols/
 ```

@@ -25,10 +25,50 @@ class InfoScreen extends StatelessWidget {
               leading: Icon(Icons.paste),
               title: Text('Paste from clipboard'),
               subtitle: Text('Long press the number screen to paste'),
+            ),
+            TextButton.icon(
+              // onPressed: () => _showDialog(context),
+              onPressed: () => _showAbout(context),
+              icon: Icon(Icons.info),
+              label: const Text('Release version')
             )
           ]
         )
       )
     );
   }
+  _showAbout(BuildContext context) {
+    showAboutDialog(
+      context: context,
+      applicationName: 'BigButton Calculator',
+      applicationVersion: '1.2.1+9',
+      applicationLegalese: '2022 Jimbong Labs',
+      applicationIcon: const Image(
+        image: AssetImage('assets/about-icon.png')
+      ),
+      children: [
+        const SizedBox(height: 10),
+        Text('Made by Jim who hated his stock calculator.')
+      ]
+    );
+  }
+
+  // _showDialog(BuildContext context) => showDialog(context: context, builder: (context) {
+  //   var text = RichText(text: TextSpan(
+  //     style: Theme.of(context).textTheme.bodyText2,
+  //     children: const [
+  //       TextSpan(text: 'BigButton Calculator 1.2.1+9.\n', style: TextStyle(fontWeight: FontWeight
+  //           .bold)),
+  //       TextSpan(text: 'Made by Jim who hated his stock calculator.')
+  //     ]
+  //   ));
+  //
+  //   return AlertDialog(
+  //     title: const Text('Release Version'),
+  //     content: text,
+  //     actions: [
+  //       TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close'))
+  //     ],
+  //   );
+  // });
 }

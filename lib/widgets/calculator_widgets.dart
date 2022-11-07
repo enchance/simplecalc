@@ -97,6 +97,15 @@ class _CalcButtonState extends State<CalcButton> {
             )
         );
 
+      case '^':
+        return GestureDetector(
+            onTap: () => calc.equation == '' ? null : calc.append(widget.value),
+            child: CalcContent(
+                color: tintColor(Colors.grey, 0.3),
+                value: Icon(Icons.superscript, color: Colors.white, size: 35,)
+            )
+        );
+
       case '(':
       case ')':
         return GestureDetector(
@@ -108,7 +117,6 @@ class _CalcButtonState extends State<CalcButton> {
               radius: 'left',
             )
         );
-
       // case 'M+':
       //   return GestureDetector(
       //       onTap: () => _copy(context, calc.equation),
