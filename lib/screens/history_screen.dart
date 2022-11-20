@@ -206,15 +206,12 @@ class _TopMessageWidgetState extends State<TopMessageWidget> {
                     const Text('Tap number to copy'),
 
                     // if(widget.clearAll != null)
-                    TextButton.icon(
-                        style: TextButton.styleFrom(
-                            foregroundColor: Colors.pink.withOpacity(0.6)
-                        ),
-                        onPressed: widget.clearAll,
-                        icon: Icon(Icons.delete_forever,
-                          color: Colors.pink.withOpacity(0.6),
-                        ),
-                        label: const Text('Clear History')
+                    TextButton(
+                      style: TextButton.styleFrom(
+                          foregroundColor: Colors.grey
+                      ),
+                      onPressed: widget.clearAll,
+                      child: const Text('Clear History')
                     )
                   ]
               ),
