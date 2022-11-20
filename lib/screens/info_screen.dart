@@ -19,12 +19,12 @@ class InfoScreen extends StatelessWidget {
             const ListTile(
               leading: Icon(Icons.copy),
               title: Text('Copy solution'),
-              subtitle: Text('Tap solution to copy'),
+              subtitle: Text('Tap display screen to copy'),
             ),
             const ListTile(
               leading: Icon(Icons.paste),
               title: Text('Paste from clipboard'),
-              subtitle: Text('Long press the number screen to paste'),
+              subtitle: Text('Long press display screen to paste'),
             ),
             TextButton.icon(
               // onPressed: () => _showDialog(context),
@@ -37,6 +37,7 @@ class InfoScreen extends StatelessWidget {
       )
     );
   }
+
   _showAbout(BuildContext context) {
     showAboutDialog(
       context: context,

@@ -117,6 +117,7 @@ class _CalcButtonState extends State<CalcButton> {
               radius: 'left',
             )
         );
+
       // case 'M+':
       //   return GestureDetector(
       //       onTap: () => _copy(context, calc.equation),
